@@ -6,16 +6,9 @@
 ## Keyboard models. Un-comment the options you want.
 
 #MODEL = flake
-#FLAKE = true
-
 MODEL = hoof
-HOOF = true
-
 #MODEL = paw
-#PAW = true
-
 #MODEL = petal
-#PETAL = true
 
 LAYOUT = ANSI_ISO_JIS
 #LAYOUT = DVORAK

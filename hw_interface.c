@@ -53,28 +53,22 @@ bool probe_column(uint8_t c) {
 // 2 = scroll lock, 1 = caps lock, 0 = num lock.
 void update_leds(uint8_t keyboard_leds) {
   // TODO: Replace by some smart definitions in corresponding board.h-files.
-  // This doesn't even work...
+#if defined hoof_h__
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 4) & 0b00100000); // Caps Lock
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
-/* #if defined HOOF */
-/*   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 4) & 0b00100000); // Caps Lock */
-/*   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock */
-/* #endif */
-/* #if defined FLAKE */
-/*   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 6) & 0b10000000); // Caps Lock */
-/*   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Win Lock (used as Scroll Lock) */
-/*   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock */
-/* #endif */
-/* #if defined PAW */
-/*   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock */
-/*   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock */
-/*   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock */
-/* #endif */
-/* #if defined PETAL */
-/*   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock */
-/*   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock */
-/*   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock */
-/* #endif */
+#elif defined flake_h__
+  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 6) & 0b10000000); // Caps Lock
+  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Win Lock (used as Scroll Lock)
+  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
+#elif defined paw_h__
+  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
+  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
+  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
+#elif defined petal_h__
+  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
+  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
+  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
+#endif
 }
 
 void keyboard_init() {
