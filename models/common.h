@@ -80,7 +80,16 @@
          TAB, QUOT,COMM, DOT,   P,   Y,   F,   G,   C,   R,   L,SLSH, EQL,BSLS,   DEL, END,PGDN,    P7,  P8,  P9,PPLS, \
          CAPS,   A,   O,   E,   U,   I,   D,   H,   T,   N,   S,MINS,      ENT,                     P4,  P5,  P6,      \
          LSFT,NUBS,SCLN,   Q,   J,   K,   X,   B,   M,   W,   V,   Z,     RSFT,         UP,         P1,  P2,  P3,PENT, \
-         LCTL,LGUI,LALT,                SPC,               RALT,RGUI, APP,RCTL,  LEFT,DOWN,RGHT)    P0,     PDOT       )
+         LCTL,LGUI,LALT,                SPC,               RALT,RGUI, APP,RCTL,  LEFT,DOWN,RGHT,    P0,     PDOT       )
+
+#define TEST_FLAKE \
+  KEYMAP(ESC,        F1,  F2,  F3,  F4,  F5,  F6,  F7,  F8,  F9, F10, F11, F12,  PSCR,SLCK,PAUS,                       \
+         GRV,    1,   2,   3,   4,   5,   6,   7,   8,   9,   0,MINS, EQL,BSPC,   INS,HOME,PGUP,  NLCK,PSLS,PAST,PMNS, \
+         TAB,    Q,   W,   E,   R,   T,   Y,   U,   I,   O,   P,LBRC,RBRC,BSLS,   DEL, END,PGDN,    P7,  P8,  P9,PPLS, \
+         CAPS,   A,   S,   D,   F,   G,   H,   J,   K,   L,SCLN,QUOT,      ENT,                     P4,  P5,  P6,      \
+         LSFT,NUBS,   Z,   X,   C,   V,   B,   N,   M,COMM, DOT,SLSH,     RSFT,          UP,        P1,  P2,  P3,PENT, \
+         LCTL,LGUI,LALT,                SPC,               RALT,RGUI,NLCK,RCTL,   LEFT,DOWN,RGHT,   P0,     PDOT       )
+
 
 /* Test layouts to easily find the position of keys in the underlying
    matrix. */

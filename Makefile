@@ -5,13 +5,14 @@
 
 ## Keyboard models. Un-comment the options you want.
 
-#MODEL = flake
-MODEL = hoof
+MODEL = flake
+#MODEL = hoof
 #MODEL = paw
 #MODEL = petal
 
-LAYOUT = ANSI_ISO_JIS
+#LAYOUT = ANSI_ISO_JIS
 #LAYOUT = DVORAK
+LAYOUT = TEST_FLAKE
 #LAYOUT = TEST_COLS
 #LAYOUT = TEST_ROWS
 
