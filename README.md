@@ -24,14 +24,17 @@ Features will be limited to the following topics
 For more advanced features there are other keyboard firmwares already way ahead of this project. If you want to contribute by increasing clarity, understandability or simplicity, please do. Also feel free to fork, clone or copy selected parts to diverge however you like from the constraints of this project.
 
 ## Other keyboard firmwares
+
 Some other noteworhty keyboard firmware projects are
 * https://github.com/tmk/tmk_keyboard
 * (add more here..)
 Forks from this project
 * https://github.com/pa3zo6/costar_keyboard
-* (add more here..) 
+* (add more here..)
 
-## Compiling
+## Compiling firmwares
+
+In order to compile firmwares, avr-gcc is required. Please ensure you have it installed before moving to next step.
 
 You need to select the correct MODEL and LAYOUT variables in the Makefile
 
@@ -43,18 +46,21 @@ F_CPU = 16000000
 B_LOADER = \"jmp\ 0x7000\"
 ```
 
-Then run the make command in a terminal. Always run a `make clean` first.
+Then run the `make` command in a terminal. Always run a `make clean` first.
 
 ```
 make clean; make
 ```
 
+If the process is successful, you would find binary firmware with extension .hex inside the binaries folder
+
 ## Flashing the controller
+
+Make sure you install dfu-programmer first.
 
 ```
 dfu-programmer atmega32u2 erase
 dfu-programmer atmega32u2 flash binaries/[flake|paw|hoof|petal]_ANSI_ISO_JIS.hex
 dfu-programmer atmega32u2 start
 ```
-
 
