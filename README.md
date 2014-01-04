@@ -12,7 +12,7 @@ For more information, please see WIKI http://deskthority.net/wiki/Costar_replace
 
 ## Intentions
 
-One goal of this project is to make a keyboard firmware as simple (within reason) as possible. It is supposed to be a first introduction to how a keyboard works.
+One goal of this project is to make a keyboard firmware for ATmega32U2 based daughter boards as simple (within reason) as possible. It is supposed to be a first introduction to how a keyboard works.
 
 Features will be limited to the following topics
 * Basic keyboard (nothing mouse or other devices)
