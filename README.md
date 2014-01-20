@@ -25,9 +25,10 @@ For more advanced features there are other keyboard firmwares already way ahead 
 
 ## Other keyboard firmwares
 
-Some other noteworhty keyboard firmware projects are
+Some other noteworthy keyboard firmware projects are
 * https://github.com/tmk/tmk_keyboard
 * (add more here..)
+
 Forks from this project
 * https://github.com/pa3zo6/costar_keyboard
 * (add more here..)
