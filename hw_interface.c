@@ -54,8 +54,8 @@ bool probe_column(uint8_t c) {
 void update_leds(uint8_t keyboard_leds) {
   // TODO: Replace by some smart definitions in corresponding board.h-files.
 #if defined hoof_h__
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 4) & 0b00100000); // Caps Lock
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
+  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 3) & 0b00100000); // Caps Lock
+  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Scroll Lock
 #elif defined flake_h__
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 6) & 0b10000000); // Caps Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Win Lock (used as Scroll Lock)
