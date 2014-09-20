@@ -24,17 +24,11 @@
  */
 
 #include <avr/pgmspace.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
-/* Include keycode definitions. */
-#include "lib/keycode.h"
-/* Extra definitions for AVR stuff. */
-#include "lib/avr_extra.h"
-/* Include the correct keyboard model. Defined in Makefile. */
-#include KEYBOARD_MODEL
-
 #include "lib/usb_keyboard_debug.h"
 #include "lib/print.h"
+#include "hw_interface.h"
+/* Include the correct keyboard model. Defined in Makefile. */
+#include KEYBOARD_MODEL
 
 /* A key can be either a normal character or a modifier key. A struct
    is used to keep track of the keycode and type of key. Layouts are

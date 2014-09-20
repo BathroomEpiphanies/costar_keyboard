@@ -7,7 +7,9 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+/* Extra definitions for AVR stuff. */
 #include "../lib/avr_extra.h"
+/* include keycode definitions. */
 #include "../lib/keycode.h"
 
 #define STR_MANUFACTURER L"Bathroom Epiphanies, Costar Keyboard -"
