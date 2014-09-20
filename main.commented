@@ -68,17 +68,17 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
      register within the specified debounce time of the switches (5ms
      for Cherry MX). We do NOT want to enter a call to another scan
      before the previous one finishes. Some care needs to be taken
-     when choosing the parameters in poll_timer_setup() located in
-     "KEYBOARD_MODEL".c. Scans may take different amount of time to
+     when choosing the parameters in `poll_timer_setup()`, located in
+     `hw_interface.c`. Scans may take different amount of time to
      finish due to other interrupt based routines. The simple solution
      is to disable the scan interrupts. */
   poll_timer_disable();
 
   /* Poll the matrix. 
 
-     pull_column and probe_row are defined in
-     "KEYBOARD_MODEL".c. probe_row returns 0b00000001 for matrix
-     positions where the key is pressed, 0b00000001 for the rest. This
+     `pull_column` and `probe_row` are defined in
+     `hw_interface.c`. `probe_row` returns `0b00000001` for matrix
+     positions where the key is pressed, `0b00000001` for the rest. This
      value is written to the lowest bit in bounce_register.
 
      If all but the highest bit are ones, the key may be transiting
@@ -126,7 +126,7 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
   //   jump_bootloader();
 
   /* Update the keyboard keyboard LEDs. 
-     update_leds is defined in "KEYBOARD_MODEL".c */
+     update_leds is defined in `hw_interface.c` */
   update_leds(keyboard_leds);
 
 #ifdef DEBUG
