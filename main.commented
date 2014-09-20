@@ -42,16 +42,16 @@ struct {uint8_t type; uint8_t value;} layout[] = KEYBOARD_LAYOUT;
    The remaining seven bits is used as a debouncing register. The
    lowest bit is shifted left at each poll. When the seven register
    bits transits to all ones the key is considered de-bounced and
-   added to the send queue. 
+   added to the send queue.
 
    If all register bits transits to zeros the key is considered
-   debounced in its released state and removed from the send queue. 
-   
+   debounced in its released state and removed from the send queue.
+
    We also need to keep track of which keys that are pressed and
    not. */
 struct {uint8_t pressed; uint8_t bounce;} key[NKEY];
 
-/* queue     contains the keys that are to be sent in the HID packet 
+/* queue     contains the keys that are to be sent in the HID packet
    mod_keys  is the bit pattern corresponding to pressed modifier keys */
 uint8_t queue[7] = {255,255,255,255,255,255,255};
 uint8_t mod_keys = 0;
@@ -125,13 +125,13 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
   // if(mod_keys == (uint8_t)(KC_LSFT | KC_RSFT))
   //   jump_bootloader();
 
-  /* Update the keyboard keyboard LEDs. 
+  /* Update the keyboard keyboard LEDs.
      update_leds is defined in `hw_interface.c` */
   update_leds(keyboard_leds);
 
 #ifdef DEBUG
   debug_print();
-#endif  
+#endif
 
   /* Turn polling back on again. */
   poll_timer_enable();
@@ -165,7 +165,7 @@ void key_press(uint8_t k) {
   if(IS_MODIFIER(layout[k]))
     mod_keys |= layout[k].value;
   else {
-    for(i = 5; i > 0; i--) 
+    for(i = 5; i > 0; i--)
       queue[i] = queue[i-1];
     queue[0] = k;
   }
@@ -181,7 +181,7 @@ void key_release(uint8_t k) {
   if(IS_MODIFIER(layout[k]))
     mod_keys &= ~layout[k].value;
   else {
-    for(i = 0; i < 6; i++) 
+    for(i = 0; i < 6; i++)
       if(queue[i]==k)
         break;
     for(i = i; i < 6; i++)
