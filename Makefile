@@ -27,7 +27,7 @@ B_LOADER = \"jmp\ 0x7000\"
 ## You probably do not want to change anything below //Fredrik
 
 #----------------------------------------------------------------------------
-# WinAVR Makefile Template written by Eric B. Weddington, Jörg Wunsch, et al.
+# WinAVR Makefile Template written by Eric B. Weddington, JÃ¶rg Wunsch, et al.
 #
 # Released to the Public Domain
 #
