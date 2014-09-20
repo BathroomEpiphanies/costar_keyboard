@@ -26,15 +26,6 @@
 #include "hw_interface.h"
 #include KEYBOARD_MODEL
 
-void pull_row(uint8_t row);
-void release_rows(void);
-bool probe_column(uint8_t col);
-void update_leds(uint8_t keyboard_leds);
-void keyboard_init(void);
-void poll_timer_setup(void);
-void poll_timer_enable(void);
-void poll_timer_disable(void);
-
 struct {uint8_t *const pin; const uint8_t bit;} column_pins[NCOL] = COLUMN_PINS;
 const   uint8_t                                 row_bits[NROW]    = ROW_BITS;
 
