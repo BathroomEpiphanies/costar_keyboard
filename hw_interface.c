@@ -24,6 +24,7 @@
  */
 
 #include "hw_interface.h"
+#include KEYBOARD_MODEL
 
 void pull_row(uint8_t row);
 void release_rows(void);
