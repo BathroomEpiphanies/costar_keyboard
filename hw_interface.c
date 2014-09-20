@@ -23,6 +23,7 @@
  * SOFTWARE.
  */
 
+#include "lib/avr_extra.h"
 #include "hw_interface.h"
 #include KEYBOARD_MODEL
 
