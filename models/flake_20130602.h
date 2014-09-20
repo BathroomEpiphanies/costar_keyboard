@@ -1,7 +1,7 @@
 /* CM Storm Quick Fire Rapid replacement controller board parameters. */
 
-#ifndef flake_h__
-#define flake_h__
+#ifndef flake_20130602_h__
+#define flake_20130602_h__
 
 #include "common.h"
 
