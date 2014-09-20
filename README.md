@@ -79,3 +79,17 @@ $ dfu-programmer atmega32u2 flash binaries/[flake|paw|hoof|petal]_ANSI_ISO_JIS.h
 $ dfu-programmer atmega32u2 start
 ```
 
+## License
+
+`costar_keyboard` is free software released under the MIT license.
+
+See the `COPYING.MIT` file or <http://opensource.org/licenses/MIT>
+for more details.
+
+Some files distributed as part of `costar_keyboard` are licensed under
+different licenses:
+
+* portions of `Makefile`: Public domain (by Eric B. Weddington, Jörg
+  Wunsch et al.);
+* `lib/keycode.h`: GPL v2 or later (by Jun Wako);
+* `lib/usb_keyboard_debug.c`: MIT (by PJRC.COM, LLC).
