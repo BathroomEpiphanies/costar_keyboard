@@ -51,10 +51,11 @@ struct {uint8_t type; uint8_t value;} layout[] = KEYBOARD_LAYOUT;
    not. */
 struct {uint8_t pressed; uint8_t bounce;} key[NKEY];
 
-/* queue     contains the keys that are to be sent in the HID packet
-   mod_keys  is the bit pattern corresponding to pressed modifier keys */
+/* NO_KEY is the value used for the empty places in the queue */
 #define NO_KEY 255
+/* queue contains the keys that are to be sent in the HID packet */
 uint8_t queue[MAX_PKEYS+1] = { [0 ... MAX_PKEYS] = NO_KEY };
+/* mod_keys is the bit pattern corresponding to pressed modifier keys */
 uint8_t mod_keys = 0;
 
 void init(void);
