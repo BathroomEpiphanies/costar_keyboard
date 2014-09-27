@@ -30,6 +30,11 @@
 struct {uint8_t *const pin; const uint8_t bit;} column_pins[NCOL] = COLUMN_PINS;
 const   uint8_t                                 row_bits[NROW]    = ROW_BITS;
 
+/* The `pin` struct describes a AVR pin.
+ * See <http://maxembedded.com/2011/06/10/port-operations-in-avr/> for an
+ * overview of how AVR i/o works. */
+struct pin {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;};
+
 void pull_row(uint8_t r) {
   ROW_PORT = (ROW_PORT & ~ROW_MASK) | row_bits[r];
   _delay_us(SETTLE_TIME_US);
@@ -73,8 +78,8 @@ void update_leds(uint8_t keyboard_leds) {
 void keyboard_init() {
   CPU_PRESCALE(0);                // 16MHz operation
   MCUCR |= 0x80; MCUCR |= 0x80;   // Disable JTAG
-  struct {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;} input_pins[3] = INPUT_PINS;
-  struct {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;} output_pins[3] = OUTPUT_PINS;
+  struct pin input_pins[3] = INPUT_PINS;
+  struct pin output_pins[3] = OUTPUT_PINS;
   for(int i=0; i<3; i++) {
     *input_pins[i].ddr = *input_pins[i].ddr & ~input_pins[i].bits;
     *input_pins[i].port = *input_pins[i].port | input_pins[i].bits;
