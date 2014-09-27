@@ -131,7 +131,7 @@ CSTANDARD = -std=gnu99
 
 
 # Place -D or -U options here for C sources
-CDEFS = -DF_CPU=$(F_CPU)UL -DBOOTLOADER_JUMP=$(B_LOADER) -DKEYBOARD_MODEL=\"models/$(MODEL).h\" -DKEYBOARD_LAYOUT=$(LAYOUT)
+CDEFS = -DF_CPU=$(F_CPU)UL -DBOOTLOADER_JUMP=$(B_LOADER) -DKEYBOARD_MODEL_FILE=\"models/$(MODEL).h\" -DKEYBOARD_LAYOUT=$(LAYOUT)
 
 
 # Place -D or -U options here for ASM sources

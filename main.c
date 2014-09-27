@@ -28,11 +28,11 @@
 #include "lib/print.h"
 #include "hw_interface.h"
 /* Include the correct keyboard model. Defined in Makefile. */
-#include KEYBOARD_MODEL
+#include KEYBOARD_MODEL_FILE
 
 /* A key can be either a normal character or a modifier key. A struct
    is used to keep track of the keycode and type of key. Layouts are
-   defined in "KEYBOARD_MODEL".h. */
+   defined in `KEYBOARD_MODEL_FILE`. */
 struct {uint8_t type; uint8_t value;} layout[] = KEYBOARD_LAYOUT;
 
 /* Each keys bounce status is represented by an 8-bit integer. The

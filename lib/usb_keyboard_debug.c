@@ -27,7 +27,7 @@
 
 #define USB_SERIAL_PRIVATE_INCLUDE
 #include "usb_keyboard_debug.h"
-#include KEYBOARD_MODEL
+#include KEYBOARD_MODEL_FILE
 
 /**************************************************************************
  *
