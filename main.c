@@ -53,7 +53,7 @@ struct {uint8_t pressed; uint8_t bounce;} key[NKEY];
 
 /* queue     contains the keys that are to be sent in the HID packet
    mod_keys  is the bit pattern corresponding to pressed modifier keys */
-uint8_t queue[7] = {255,255,255,255,255,255,255};
+uint8_t queue[MAX_PKEYS+1] = {255,255,255,255,255,255,255};
 uint8_t mod_keys = 0;
 
 void init(void);
@@ -150,7 +150,7 @@ int main(void) {
    send it. */
 void send(void) {
   uint8_t i;
-  for(i = 0; i < 6; i++)
+  for(i = 0; i < MAX_PKEYS; i++)
     keyboard_keys[i] = queue[i]<255? layout[queue[i]].value: 0;
   keyboard_modifier_keys = mod_keys;
   usb_keyboard_send();
@@ -165,7 +165,7 @@ void key_press(uint8_t k) {
   if(IS_MODIFIER(layout[k]))
     mod_keys |= layout[k].value;
   else {
-    for(i = 5; i > 0; i--)
+    for(i = MAX_PKEYS-1; i > 0; i--)
       queue[i] = queue[i-1];
     queue[0] = k;
   }
@@ -181,10 +181,10 @@ void key_release(uint8_t k) {
   if(IS_MODIFIER(layout[k]))
     mod_keys &= ~layout[k].value;
   else {
-    for(i = 0; i < 6; i++)
+    for(i = 0; i < MAX_PKEYS; i++)
       if(queue[i]==k)
         break;
-    for(i = i; i < 6; i++)
+    for(i = i; i < MAX_PKEYS; i++)
       queue[i] = queue[i+1];
   }
   send();
