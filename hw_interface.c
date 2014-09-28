@@ -107,11 +107,24 @@ void poll_timer_setup(void) {
   OCR0A = 16;    // Set Timer0 comparison to 16 (the number of steps)
 }
 
+/* ### poll_timer_enable
+ *
+ * Enable the timer that will run the polling routing when it will go
+ * off.
+ *
+ * The timer register must have been set up before `poll_timer_enable`
+ * is called.
+ */
 void poll_timer_enable(void) {
   TIMSK0 |=      // Timer interrupt mask register 0
     (1<<OCIE0A); // Enable timer interrupt on compare match with OCR0A
 }
 
+/* ### poll_timer_disable
+ *
+ * Disable the polling timer. `poll_timer_enable` can be used to enable
+ * the timer again.
+ */
 void poll_timer_disable(void) {
   TIMSK0 &=       // Timer interrupt mask register 0
     ~(1<<OCIE0A); // Disable timer interrupt on compare match with OCR0A
