@@ -24,17 +24,11 @@
  */
 
 #include <avr/pgmspace.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
-/* Include keycode definitions. */
-#include "lib/keycode.h"
-/* Extra definitions for AVR stuff. */
-#include "lib/avr_extra.h"
-/* Include the correct keyboard model. Defined in Makefile. */
-#include KEYBOARD_MODEL
-
 #include "lib/usb_keyboard_debug.h"
 #include "lib/print.h"
+#include "hw_interface.h"
+/* Include the correct keyboard model. Defined in Makefile. */
+#include KEYBOARD_MODEL
 
 /* A key can be either a normal character or a modifier key. A struct
    is used to keep track of the keycode and type of key. Layouts are
@@ -48,16 +42,16 @@ struct {uint8_t type; uint8_t value;} layout[] = KEYBOARD_LAYOUT;
    The remaining seven bits is used as a debouncing register. The
    lowest bit is shifted left at each poll. When the seven register
    bits transits to all ones the key is considered de-bounced and
-   added to the send queue. 
+   added to the send queue.
 
    If all register bits transits to zeros the key is considered
-   debounced in its released state and removed from the send queue. 
-   
+   debounced in its released state and removed from the send queue.
+
    We also need to keep track of which keys that are pressed and
    not. */
 struct {uint8_t pressed; uint8_t bounce;} key[NKEY];
 
-/* queue     contains the keys that are to be sent in the HID packet 
+/* queue     contains the keys that are to be sent in the HID packet
    mod_keys  is the bit pattern corresponding to pressed modifier keys */
 uint8_t queue[7] = {255,255,255,255,255,255,255};
 uint8_t mod_keys = 0;
@@ -74,30 +68,30 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
      register within the specified debounce time of the switches (5ms
      for Cherry MX). We do NOT want to enter a call to another scan
      before the previous one finishes. Some care needs to be taken
-     when choosing the parameters in poll_timer_setup() located in
-     "KEYBOARD_MODEL".c. Scans may take different amount of time to
+     when choosing the parameters in `poll_timer_setup()`, located in
+     `hw_interface.c`. Scans may take different amount of time to
      finish due to other interrupt based routines. The simple solution
      is to disable the scan interrupts. */
   poll_timer_disable();
 
-  /* Poll the matrix. 
+  /* Poll the matrix.
 
-     pull_column and probe_row are defined in
-     "KEYBOARD_MODEL".c. probe_row returns 0b00000001 for matrix
-     positions where the key is pressed, 0b00000001 for the rest. This
-     value is written to the lowest bit in bounce_register.
+     `pull_row` and `probe_column` are defined in `hw_interface.c`.
+     `probe_column` returns `0b00000001` for matrix positions where the
+     key is pressed, `0b00000000` for the rest. This value is written
+     to the lowest bit in the `key[k].bounce` register.
 
      If all but the highest bit are ones, the key may be transiting
      from a released to a pressed state, and we have registered the
      key as pressed for seven consecutive polls. If the key is not
-     already marked as pressed in key_pressed we consider this a true
+     already marked as pressed in `key[k].pressed` we consider this a true
      press and not only interference. The key is then added to the
      send queue.
 
      If all but the highest bit are zeros, the key may be transiting
      from a pressed to a released state, and we have registered the
      key as released for seven consecutive polls. If the key is marked
-     as pressed in key_pressed we consider this a true release. The
+     as pressed in `key[k].pressed` we consider this a true release. The
      key is then removed from the send queue.
 
      We don't want to release a key on a random glitch in the matrix
@@ -105,15 +99,15 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
      glitch has been shifted out of the bounce register.
 
      If noise is not present, and we want faster reaction to a key
-     press event, it is possible to trigger the key_press on the first
+     press event, it is possible to trigger the `key_press` on the first
      positive read of the poll. The release event on the other hand
      should always be debounced. Otherwise there would be several key
      presses on both the press and release event due to bounce. */
-  for(uint8_t c = 0, k = 0; c < NCOL; c++) {
-    pull_column(c);
-    for(uint8_t r = 0; r < NROW; r++, k++) {
-      key[k].bounce |= probe_row(r);
-      
+  for(uint8_t r = 0, k = 0; r < NROW; r++) {
+    pull_row(r);
+    for(uint8_t c = 0; c < NCOL; c++, k++) {
+      key[k].bounce |= probe_column(c);
+
       if(key[k].bounce == 0b01111111 && !key[k].pressed)
         key_press(k);
       if(key[k].bounce == 0b10000000 &&  key[k].pressed)
@@ -122,7 +116,7 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
       key[k].bounce <<= 1;
     }
   }
-  release_columns();
+  release_rows();
 
   /* Check if the trigger to jump to the bootloader has been
      activated. In this case when both shift keys are pressed at the
@@ -131,13 +125,13 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
   // if(mod_keys == (uint8_t)(KC_LSFT | KC_RSFT))
   //   jump_bootloader();
 
-  /* Update the keyboard keyboard LEDs. 
-     update_leds is defined in "KEYBOARD_MODEL".c */
+  /* Update the keyboard keyboard LEDs.
+     update_leds is defined in `hw_interface.c` */
   update_leds(keyboard_leds);
 
 #ifdef DEBUG
   debug_print();
-#endif  
+#endif
 
   /* Turn polling back on again. */
   poll_timer_enable();
@@ -171,7 +165,7 @@ void key_press(uint8_t k) {
   if(IS_MODIFIER(layout[k]))
     mod_keys |= layout[k].value;
   else {
-    for(i = 5; i > 0; i--) 
+    for(i = 5; i > 0; i--)
       queue[i] = queue[i-1];
     queue[0] = k;
   }
@@ -187,7 +181,7 @@ void key_release(uint8_t k) {
   if(IS_MODIFIER(layout[k]))
     mod_keys &= ~layout[k].value;
   else {
-    for(i = 0; i < 6; i++) 
+    for(i = 0; i < 6; i++)
       if(queue[i]==k)
         break;
     for(i = i; i < 6; i++)
