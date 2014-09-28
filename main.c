@@ -162,17 +162,6 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
 }
 
 
-/* Translate internal key numers to keycodes, build a HID packet and
-   send it. */
-void send(void) {
-  uint8_t i;
-  for(i = 0; i < MAX_PKEYS; i++)
-    keyboard_keys[i] = queue[i] != NO_KEY ? layout[queue[i]].value : 0;
-  keyboard_modifier_keys = mod_keys;
-  usb_keyboard_send();
-}
-
-
 /* Add key to the send queue. If it is a modifier its bit pattern is
    added to the modifier byte. */
 void key_press(uint8_t k) {
@@ -216,6 +205,28 @@ void init(void) {
   for(uint8_t k = 0; k < NKEY; k++)
     key[k].bounce = key[k].pressed = 0x00;
   sei();  // Enable interrupts
+}
+
+
+/* ### send
+ *
+ * Send all the queued keys via USB.
+ *
+ * To send the keycodes, the first `MAX_PKEYS`-1 slots of the
+ * queue are searched. If a key number is found in the queue, it is
+ * converted into the corresponding keycode (using the `layout`
+ * mapping) and saved in the `keyboard_keys` array.
+ *
+ * The global variables `keyboard_keys` and  `keyboard_modifier_keys`
+ * are used by the `usb_keyboard_send` function to build a HID
+ * packet and send it.
+ */
+void send(void) {
+  uint8_t i;
+  for(i = 0; i < MAX_PKEYS; i++)
+    keyboard_keys[i] = queue[i] != NO_KEY ? layout[queue[i]].value : 0;
+  keyboard_modifier_keys = mod_keys;
+  usb_keyboard_send();
 }
 
 
