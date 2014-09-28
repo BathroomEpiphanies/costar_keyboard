@@ -64,6 +64,20 @@ void key_press(uint8_t k);
 void key_release(uint8_t k);
 void debug_print(void);
 
+/* ### main
+ *
+ * Call initialization functions and start polling.
+ *
+ * Once the polling timer is enabled, the `main` function spins
+ * forever. This is normal, as all the work is done in the interrupt
+ * handler called every time the timer fires.
+ */
+int main(void) {
+  init();
+  poll_timer_enable(); //Turn interrupt polling on
+  for(ever);
+}
+
 
 ISR(SCAN_INTERRUPT_FUNCTION) {
   /* We want to be able to scan often enough to fill the debounce
@@ -137,14 +151,6 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
 
   /* Turn polling back on again. */
   poll_timer_enable();
-}
-
-
-/* Call initialization functions and start polling. */
-int main(void) {
-  init();
-  poll_timer_enable(); //Turn interrupt polling on
-  for(ever);
 }
 
 
