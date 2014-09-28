@@ -23,16 +23,9 @@
  * SOFTWARE.
  */
 
+#include "lib/avr_extra.h"
 #include "hw_interface.h"
-
-void pull_row(uint8_t row);
-void release_rows(void);
-bool probe_column(uint8_t col);
-void update_leds(uint8_t keyboard_leds);
-void keyboard_init(void);
-void poll_timer_setup(void);
-void poll_timer_enable(void);
-void poll_timer_disable(void);
+#include KEYBOARD_MODEL
 
 struct {uint8_t *const pin; const uint8_t bit;} column_pins[NCOL] = COLUMN_PINS;
 const   uint8_t                                 row_bits[NROW]    = ROW_BITS;
@@ -53,10 +46,10 @@ bool probe_column(uint8_t c) {
 // 2 = scroll lock, 1 = caps lock, 0 = num lock.
 void update_leds(uint8_t keyboard_leds) {
   // TODO: Replace by some smart definitions in corresponding board.h-files.
-#if defined hoof_h__
+#if defined hoof_20131001_h__
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 3) & 0b00100000); // Caps Lock
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Scroll Lock
-#elif defined flake_h__
+#elif defined flake_20130602_h__
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 6) & 0b10000000); // Caps Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Win Lock (used as Num Lock)
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
@@ -64,14 +57,16 @@ void update_leds(uint8_t keyboard_leds) {
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 7) & 0b10000000); // Caps Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 4) & 0b00100000); // Win Lock (used as Num Lock)
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
-#elif defined paw_h__
+#elif defined paw_20130602_h__
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
-#elif defined petal_h__
+#elif defined petal_20131001_h__
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
+#else
+  #error Do not know how to implement update_leds()
 #endif
 }
 

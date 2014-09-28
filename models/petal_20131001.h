@@ -1,7 +1,7 @@
 /* Rosewill replacement controller board parameters. */
 
-#ifndef petal_h__
-#define petal_h__
+#ifndef petal_20131001_h__
+#define petal_20131001_h__
 
 #include "common.h"
 

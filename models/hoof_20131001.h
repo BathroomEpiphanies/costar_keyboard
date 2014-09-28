@@ -1,7 +1,7 @@
 /* Filco Majestouch TKL replacement controller board parameters. */
 
-#ifndef hoof_h__
-#define hoof_h__
+#ifndef hoof_20131001_h__
+#define hoof_20131001_h__
 
 #include "common.h"
 

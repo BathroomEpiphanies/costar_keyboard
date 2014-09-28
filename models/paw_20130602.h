@@ -1,7 +1,7 @@
 /* Filco Majestouch replacement controller board parameters. */
 
-#ifndef paw_h__
-#define paw_h__
+#ifndef paw_20130602_h__
+#define paw_20130602_h__
 
 #include "common.h"
 
