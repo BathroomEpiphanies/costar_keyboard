@@ -89,15 +89,18 @@ void keyboard_init() {
   poll_timer_setup();
 }
 
-/* Setup timer so to trigger an interrupt every 1.024 ms.
+/* ### poll_timer_setup
+ *
+ * Setup timer so to trigger an interrupt every 1.024 ms.
  *
  * The frequency of the timer is set to 1/1024th of the clock frequency.
  * Each step increments the counter, until the counter hits 16 and
- * triggers an interrupt.
+ * triggers an interrupt. After the interrupt is triggered, the counter
+ * goes back to zero.
  *
  * Each step takes (F_CPU / 1024)^-1 = 0.064 ms, an interrupt is triggered
  * every 16 * 0.064 ms = 1.024 ms.
- * */
+ */
 void poll_timer_setup(void) {
   TCCR0A |=      // Timer0 control register A: timer mode
     (1<<WGM01);  // Set CTC, clear timer on compare
