@@ -78,7 +78,15 @@ int main(void) {
   for(ever);
 }
 
-
+/* ### timer interrupt handler
+ *
+ * Scan for pressed keys, record them and produce key press
+ * events if necessary.
+ *
+ * This function is the workhorse of the keyboard firmware. This is
+ * the code that analyses the state of the matrix of switches every
+ * millisecond, probing each switch row by row.
+ */
 ISR(SCAN_INTERRUPT_FUNCTION) {
   /* We want to be able to scan often enough to fill the debounce
      register within the specified debounce time of the switches (5ms
