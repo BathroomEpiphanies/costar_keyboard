@@ -78,6 +78,33 @@ int main(void) {
   for(ever);
 }
 
+
+/* ### init
+ *
+ * Call initialization functions and enable interrupts.
+ */
+void init(void) {
+  /* The first thing to init is the USB stack. We also wait for it to
+   * be ready, so we will be able to read keycodes in `keyboard_init`. */
+  usb_init();
+  while(!usb_configured());
+
+  /* The keyboard initialization will take care of setting the
+   * appropriate HW registers and timers. */
+  keyboard_init();
+
+  /* What is left to do is to initialize the global variables
+   * used to store the state of the keys. */
+  mod_keys = 0;
+  for(uint8_t k = 0; k < NKEY; k++)
+    key[k].bounce = key[k].pressed = 0x00;
+
+  /* The last step is to enable the interrupts. This is needed because
+   * a timed interrupt will be used to poll the state of the keys. */
+  sei();
+}
+
+
 /* ### timer interrupt handler
  *
  * Scan for pressed keys, record them and produce key press
@@ -193,18 +220,6 @@ void key_release(uint8_t k) {
       queue[i] = queue[i+1];
   }
   send();
-}
-
-
-/* Call initialization functions. */
-void init(void) {
-  usb_init();
-  while(!usb_configured());
-  keyboard_init();
-  mod_keys = 0;
-  for(uint8_t k = 0; k < NKEY; k++)
-    key[k].bounce = key[k].pressed = 0x00;
-  sei();  // Enable interrupts
 }
 
 
