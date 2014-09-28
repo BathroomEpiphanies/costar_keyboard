@@ -23,6 +23,10 @@
  * SOFTWARE.
  */
 
+/* The `hw_interface.c` file contains _glue_ functions used to read
+ * input data from the keyboard circuitry.
+ */
+
 #include "lib/avr_extra.h"
 #include "hw_interface.h"
 #include KEYBOARD_MODEL_FILE

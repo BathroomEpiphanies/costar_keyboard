@@ -23,6 +23,13 @@
  * SOFTWARE.
  */
 
+/* The `main.c` file contains the system entry point function `main`
+ * (the first function to be executed by the system) and the timer
+ * interrupt handler, that is the principal function of the firmware,
+ * the one that takes care of detecting the key presses and sending
+ * them to the computer via USB.
+ */
+
 #include <avr/pgmspace.h>
 #include "lib/usb_keyboard_debug.h"
 #include "lib/print.h"
@@ -57,6 +64,8 @@ struct {uint8_t pressed; uint8_t bounce;} key[NKEY];
 uint8_t queue[MAX_PKEYS+1] = { [0 ... MAX_PKEYS] = NO_KEY };
 /* mod_keys is the bit pattern corresponding to pressed modifier keys */
 uint8_t mod_keys = 0;
+
+/* We forward-declare these local functions. */
 
 void init(void);
 void send(void);
