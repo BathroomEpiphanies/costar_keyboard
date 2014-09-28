@@ -34,7 +34,9 @@
 #include "lib/usb_keyboard_debug.h"
 #include "lib/print.h"
 #include "hw_interface.h"
-/* Include the correct keyboard model. Defined in Makefile. */
+/* This code is very generic and relies on keyboard-specific constants
+ * to hide many details. The keyboard model is chosen setting the
+ * variable `MODEL` in the `Makefile`. */
 #include KEYBOARD_MODEL_FILE
 
 /* A key can be either a normal character or a modifier key. A struct
