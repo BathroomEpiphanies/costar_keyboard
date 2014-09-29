@@ -17,6 +17,10 @@
 #LAYOUT = TEST_COLS
 #LAYOUT = TEST_ROWS
 
+# Raise an error if MODEL or LAYOUT are used but have not been selected
+MODEL ?= $(error MODEL is not set; uncomment the appropriate MODEL in Makefile)
+LAYOUT ?= $(error LAYOUT is not set; uncomment the appropriate LAYOUT in Makefile)
+
 MCU = atmega32u2
 F_CPU = 16000000
 B_LOADER = \"jmp\ 0x7000\"
@@ -27,7 +31,7 @@ B_LOADER = \"jmp\ 0x7000\"
 ## You probably do not want to change anything below //Fredrik
 
 #----------------------------------------------------------------------------
-# WinAVR Makefile Template written by Eric B. Weddington, Jörg Wunsch, et al.
+# WinAVR Makefile Template written by Eric B. Weddington, JÃ¶rg Wunsch, et al.
 #
 # Released to the Public Domain
 #
