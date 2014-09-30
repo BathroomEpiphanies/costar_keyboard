@@ -3,8 +3,6 @@
 
 #define CPU_PRESCALE(n)	(CLKPR = 0x80, CLKPR = (n))
 
-#define ever ;;
-
 #define _DDRA (uint8_t *const)&DDRA
 #define _DDRB (uint8_t *const)&DDRB
 #define _DDRC (uint8_t *const)&DDRC
