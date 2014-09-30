@@ -23,12 +23,21 @@
  * SOFTWARE.
  */
 
+/* The `hw_interface.c` file contains _glue_ functions used to read
+ * input data from the keyboard circuitry.
+ */
+
 #include "lib/avr_extra.h"
 #include "hw_interface.h"
 #include KEYBOARD_MODEL_FILE
 
 struct {uint8_t *const pin; const uint8_t bit;} column_pins[NUMBER_OF_COLUMNS] = COLUMN_PINS;
 const   uint8_t                                 row_bits[NUMBER_OF_ROWS]    = ROW_BITS;
+
+/* The `pin` struct describes a AVR pin.
+ * See <http://maxembedded.com/2011/06/10/port-operations-in-avr/> for an
+ * overview of how AVR i/o works. */
+struct pin {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;};
 
 void pull_row(uint8_t r) {
   ROW_PORT = (ROW_PORT & ~ROW_MASK) | row_bits[r];
@@ -70,29 +79,59 @@ void update_leds(uint8_t keyboard_leds) {
 #endif
 }
 
+/* ### keyboard_init
+ *
+ * Set up the ATmega32 microcontroller.
+ *
+ * This function is called very early in `init` and will never be
+ * called again.
+ */
+
 void keyboard_init() {
-  CPU_PRESCALE(0);                // 16MHz operation
-  MCUCR |= 0x80; MCUCR |= 0x80;   // Disable JTAG
-  struct {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;} input_pins[3] = INPUT_PINS;
-  struct {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;} output_pins[3] = OUTPUT_PINS;
+  /* First we set the CPU frenquence to 16MHz instead of the
+   * default 2MHz. */
+  CPU_PRESCALE(0);
+
+  /* Second we disable JTAG: we will not use it. */
+  MCUCR |= 0x80; MCUCR |= 0x80;
+
+  /* Then we map the controller pins in they way described by
+   * `INPUT_PINS` and `OUTPUT_PINS`. These two constants are
+   * model-specific and defined in the imported
+   * `KEYBOARD_MODEL_FILE`. Together they describe which of the
+   * available 3*8 I/O pins are to be used for input (those marked
+   * with 1 in INPUT_PINS), which for output (those marked with 1
+   * in OUTPUT_PINS) and which are unused (those marked with 0 both
+   * in INPUT_PINS and OUTPUT_PINS). */
+  struct pin input_pins[3] = INPUT_PINS;
+  struct pin output_pins[3] = OUTPUT_PINS;
   for(int i=0; i<3; i++) {
     *input_pins[i].ddr = *input_pins[i].ddr & ~input_pins[i].bits;
     *input_pins[i].port = *input_pins[i].port | input_pins[i].bits;
     *output_pins[i].ddr = *output_pins[i].ddr | output_pins[i].bits;
     *output_pins[i].port = *output_pins[i].port  & ~output_pins[i].bits;
   }
+
+  /* Last we set up the timer that will trigger an interrupt about
+   * every millisecond. We will set up the timer without enabling it;
+   * it will be enabled by the `main` function once the hardware is
+   * properly configured.
+   */
   poll_timer_setup();
 }
 
-/* Setup timer so to trigger an interrupt every 1.024 ms.
+/* ### poll_timer_setup
+ *
+ * Setup timer so to trigger an interrupt every 1.024 ms.
  *
  * The frequency of the timer is set to 1/1024th of the clock frequency.
  * Each step increments the counter, until the counter hits 16 and
- * triggers an interrupt.
+ * triggers an interrupt. After the interrupt is triggered, the counter
+ * goes back to zero.
  *
  * Each step takes (F_CPU / 1024)^-1 = 0.064 ms, an interrupt is triggered
  * every 16 * 0.064 ms = 1.024 ms.
- * */
+ */
 void poll_timer_setup(void) {
   TCCR0A |=      // Timer0 control register A: timer mode
     (1<<WGM01);  // Set CTC, clear timer on compare
@@ -102,11 +141,24 @@ void poll_timer_setup(void) {
   OCR0A = 16;    // Set Timer0 comparison to 16 (the number of steps)
 }
 
+/* ### poll_timer_enable
+ *
+ * Enable the timer that will run the polling routing when it will go
+ * off.
+ *
+ * The timer register must have been set up before `poll_timer_enable`
+ * is called.
+ */
 void poll_timer_enable(void) {
   TIMSK0 |=      // Timer interrupt mask register 0
     (1<<OCIE0A); // Enable timer interrupt on compare match with OCR0A
 }
 
+/* ### poll_timer_disable
+ *
+ * Disable the polling timer. `poll_timer_enable` can be used to enable
+ * the timer again.
+ */
 void poll_timer_disable(void) {
   TIMSK0 &=       // Timer interrupt mask register 0
     ~(1<<OCIE0A); // Disable timer interrupt on compare match with OCR0A

@@ -9,3 +9,4 @@
 *.s
 *.sym
 /.dep/
+/doc/tutorial.html

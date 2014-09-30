@@ -591,6 +591,22 @@ $(OBJDIR)/%.o : %.S
 %.i : %.c
 	$(CC) -E -mmcu=$(MCU) -I. $(CFLAGS) $< -o $@ 
 
+doc: doc/tutorial.html
+
+STMD=../stmd/stmd
+DOC_SOURCES=main.c hw_interface.c
+DOC_MD=$(addprefix doc/,$(DOC_SOURCES:.c=.md))
+
+doc/tutorial.html: $(DOC_MD) doc/_header.html doc/_footer.html
+	rm -f $@
+	cat doc/_header.html >> $@
+	$(STMD) doc/introduction.md >> $@
+	for md in $(DOC_MD) ; do $(STMD) $$md >> $@ ; done
+	cat doc/_footer.html >> $@
+
+.INTERMEDIATE: $(DOC_MD)
+doc/%.md: %.c
+	doc/c-to-md.sh $< > $@
 
 # Target: clean project.
 clean: begin clean_list end
@@ -612,6 +628,7 @@ clean_list :
 	rm -f *.d 	lib/*.d 	models/*.d 	
 	rm -f *.i 	lib/*.i 	models/*.i 	
 	rm -f *~    lib/*~    models/*~    
+	rm -f doc/tutorial.html
 
 
 # Create object files directory
@@ -625,4 +642,4 @@ $(shell mkdir $(OBJDIR) 2>/dev/null)
 # Listing of phony targets.
 .PHONY : all begin finish end sizebefore sizeafter gccversion \
 build elf hex eep lss sym coff extcoff \
-clean clean_list program debug gdb-config
+clean clean_list program debug gdb-config doc

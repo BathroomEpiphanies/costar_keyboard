@@ -53,7 +53,7 @@ struct {uint8_t pressed; uint8_t bounce;} key[NUMBER_OF_KEYS];
 
 /* NO_KEY is the value used for the empty places in the queue */
 #define NO_KEY 255
-/* queue contains the keys that are to be sent in the HID packet */
+/* queue contains the keys that are to be sent in the HID packet */
 uint8_t queue[QUEUE_LENGTH+1] = { [0 ... QUEUE_LENGTH] = NO_KEY };
 /* mod_keys is the bit pattern corresponding to pressed modifier keys */
 uint8_t mod_keys = 0;
@@ -65,7 +65,7 @@ void key_release(uint8_t k);
 void debug_print(void);
 
 
-ISR(TIMER0_COMPA_vect) {
+ISR(SCAN_INTERRUPT_FUNCTION) {
   /* We want to be able to scan often enough to fill the debounce
      register within the specified debounce time of the switches (5ms
      for Cherry MX). We do NOT want to enter a call to another scan
@@ -144,7 +144,7 @@ ISR(TIMER0_COMPA_vect) {
 int main(void) {
   init();
   poll_timer_enable(); //Turn interrupt polling on
-  for(ever);
+  for(;;);
 }
 
 
