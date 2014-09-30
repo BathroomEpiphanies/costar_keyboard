@@ -15,12 +15,9 @@
 #define STR_MANUFACTURER L"Bathroom Epiphanies, Costar Keyboard -"
 #define VENDOR_ID        0x16C0
 
-#define SCAN_INTERRUPT_FUNCTION TIMER0_COMPA_vect
-#define SETTLE_TIME_US 1
-
-#define NROW  18
-#define NCOL   8
-#define NKEY 144
+#define NUMBER_OF_ROWS     18
+#define NUMBER_OF_COLUMNS   8
+#define NUMBER_OF_KEYS    144
 
 /* Convert physical keyboard layout to matrix array. This is a macro
    to define keymap easily in keyboard layout form. All ANSI ISO JIS

@@ -10,7 +10,7 @@
 
 #define ROW_PORT  PORTB
 #define ROW_MASK  0b01111110
-#define ROW_BITS \ 
+#define ROW_BITS \
   {              \
     0b00111010,  \
     0b01011000,  \

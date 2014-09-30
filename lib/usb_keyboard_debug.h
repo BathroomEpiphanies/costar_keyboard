@@ -11,8 +11,8 @@ int8_t usb_keyboard_press(uint8_t key, uint8_t modifier);
 int8_t usb_keyboard_send(void);
 void jump_bootloader(void);
 extern uint8_t keyboard_modifier_keys;
-#define MAX_PKEYS 6
-extern uint8_t keyboard_keys[MAX_PKEYS];
+#define QUEUE_LENGTH 6
+extern uint8_t keyboard_keys[QUEUE_LENGTH];
 extern volatile uint8_t keyboard_leds;
 
 int8_t usb_debug_putchar(uint8_t c);  // transmit a character

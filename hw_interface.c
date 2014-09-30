@@ -27,12 +27,12 @@
 #include "hw_interface.h"
 #include KEYBOARD_MODEL_FILE
 
-struct {uint8_t *const pin; const uint8_t bit;} column_pins[NCOL] = COLUMN_PINS;
-const   uint8_t                                 row_bits[NROW]    = ROW_BITS;
+struct {uint8_t *const pin; const uint8_t bit;} column_pins[NUMBER_OF_COLUMNS] = COLUMN_PINS;
+const   uint8_t                                 row_bits[NUMBER_OF_ROWS]    = ROW_BITS;
 
 void pull_row(uint8_t r) {
   ROW_PORT = (ROW_PORT & ~ROW_MASK) | row_bits[r];
-  _delay_us(SETTLE_TIME_US);
+  _delay_us(1);
 }
 
 void release_rows(void) {

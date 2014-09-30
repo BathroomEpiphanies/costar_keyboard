@@ -23,135 +23,155 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KEYCODE_H
 #define KEYCODE_H
 
-#define NORMAL   0x00
-#define MODIFIER 0x01
+#define IS_MODIFIER(key) ((key).is_modifier)
 
-#define IS_MODIFIER(key) ((key).type == MODIFIER)
+/* Definitions of keys. 
+
+   There are two types of keys on a keyboard. Normal keys and modifier
+   keys. They are handled differently from eachother. 
+
+   The currently pressed modifier keys are indicated by setting bits
+   in the 'mod_keys' variable. Each modifer has its own bit.
+
+   Normal keys are added to a queue when pressed. The queue has a
+   fixed length of 'QUEUE_LENGTH'. If the queue becomes full the earliest
+   pressed key is pushed out at the end of the queue. The keycode
+   value for normal keys are stored in the queue.
+
+   All keys are defined by a struct {is_modifier, value} where the
+   'is_modifier'-field is set to true for modifier keys, and false for
+   normal keys.
+
+   For modifier keys the 'value'-field is a bit pattern where the
+   single bit representing that specific modifier is set.
+
+   For normal keys the 'value'-field is the keycode for that key. */
 
 /* Short names */
-#define KC_NO   {NORMAL, KEY_NO}
+#define KC_NO   {false, KEY_NO}
 
-#define KC_LCTL {MODIFIER, 0x01}
-#define KC_LSFT {MODIFIER, 0x02}
-#define KC_LALT {MODIFIER, 0x04}
-#define KC_LGUI {MODIFIER, 0x08}
-#define KC_RCTL {MODIFIER, 0x10}
-#define KC_RSFT {MODIFIER, 0x20}
-#define KC_RALT {MODIFIER, 0x40}
-#define KC_RGUI {MODIFIER, 0x80}
+#define KC_LCTL {true, 0x01}
+#define KC_LSFT {true, 0x02}
+#define KC_LALT {true, 0x04}
+#define KC_LGUI {true, 0x08}
+#define KC_RCTL {true, 0x10}
+#define KC_RSFT {true, 0x20}
+#define KC_RALT {true, 0x40}
+#define KC_RGUI {true, 0x80}
 
-#define KC_A    {NORMAL, KEY_A}
-#define KC_B    {NORMAL, KEY_B}
-#define KC_C    {NORMAL, KEY_C}
-#define KC_D    {NORMAL, KEY_D}
-#define KC_E    {NORMAL, KEY_E}
-#define KC_F    {NORMAL, KEY_F}
-#define KC_G    {NORMAL, KEY_G}
-#define KC_H    {NORMAL, KEY_H}
-#define KC_I    {NORMAL, KEY_I}
-#define KC_J    {NORMAL, KEY_J}
-#define KC_K    {NORMAL, KEY_K}
-#define KC_L    {NORMAL, KEY_L}
-#define KC_M    {NORMAL, KEY_M}
-#define KC_N    {NORMAL, KEY_N}
-#define KC_O    {NORMAL, KEY_O}
-#define KC_P    {NORMAL, KEY_P}
-#define KC_Q    {NORMAL, KEY_Q}
-#define KC_R    {NORMAL, KEY_R}
-#define KC_S    {NORMAL, KEY_S}
-#define KC_T    {NORMAL, KEY_T}
-#define KC_U    {NORMAL, KEY_U}
-#define KC_V    {NORMAL, KEY_V}
-#define KC_W    {NORMAL, KEY_W}
-#define KC_X    {NORMAL, KEY_X}
-#define KC_Y    {NORMAL, KEY_Y}
-#define KC_Z    {NORMAL, KEY_Z}
-#define KC_1    {NORMAL, KEY_1}
-#define KC_2    {NORMAL, KEY_2}
-#define KC_3    {NORMAL, KEY_3}
-#define KC_4    {NORMAL, KEY_4}
-#define KC_5    {NORMAL, KEY_5}
-#define KC_6    {NORMAL, KEY_6}
-#define KC_7    {NORMAL, KEY_7}
-#define KC_8    {NORMAL, KEY_8}
-#define KC_9    {NORMAL, KEY_9}
-#define KC_0    {NORMAL, KEY_0}
-#define KC_ENT  {NORMAL, KEY_ENTER}
-#define KC_ESC  {NORMAL, KEY_ESCAPE}
-#define KC_BSPC {NORMAL, KEY_BSPACE}
-#define KC_TAB  {NORMAL, KEY_TAB}
-#define KC_SPC  {NORMAL, KEY_SPACE}
-#define KC_MINS {NORMAL, KEY_MINUS}
-#define KC_EQL  {NORMAL, KEY_EQUAL}
-#define KC_LBRC {NORMAL, KEY_LBRACKET}
-#define KC_RBRC {NORMAL, KEY_RBRACKET}
-#define KC_BSLS {NORMAL, KEY_BSLASH}
-#define KC_NUHS {NORMAL, KEY_NONUS_HASH}
-#define KC_SCLN {NORMAL, KEY_SCOLON}
-#define KC_QUOT {NORMAL, KEY_QUOTE}
-#define KC_GRV  {NORMAL, KEY_GRAVE}
-#define KC_COMM {NORMAL, KEY_COMMA}
-#define KC_DOT  {NORMAL, KEY_DOT}
-#define KC_SLSH {NORMAL, KEY_SLASH}
-#define KC_CAPS {NORMAL, KEY_CAPSLOCK}
-#define KC_F1   {NORMAL, KEY_F1}
-#define KC_F2   {NORMAL, KEY_F2}
-#define KC_F3   {NORMAL, KEY_F3}
-#define KC_F4   {NORMAL, KEY_F4}
-#define KC_F5   {NORMAL, KEY_F5}
-#define KC_F6   {NORMAL, KEY_F6}
-#define KC_F7   {NORMAL, KEY_F7}
-#define KC_F8   {NORMAL, KEY_F8}
-#define KC_F9   {NORMAL, KEY_F9}
-#define KC_F10  {NORMAL, KEY_F10}
-#define KC_F11  {NORMAL, KEY_F11}
-#define KC_F12  {NORMAL, KEY_F12}
-#define KC_PSCR {NORMAL, KEY_PSCREEN}
-#define KC_SLCK {NORMAL, KEY_SCKLOCK}
-#define KC_PAUS {NORMAL, KEY_PAUSE}
-#define KC_INS  {NORMAL, KEY_INSERT}
-#define KC_HOME {NORMAL, KEY_HOME}
-#define KC_PGUP {NORMAL, KEY_PGUP}
-#define KC_DEL  {NORMAL, KEY_DELETE}
-#define KC_END  {NORMAL, KEY_END}
-#define KC_PGDN {NORMAL, KEY_PGDOWN}
-#define KC_RGHT {NORMAL, KEY_RIGHT}
-#define KC_LEFT {NORMAL, KEY_LEFT}
-#define KC_DOWN {NORMAL, KEY_DOWN}
-#define KC_UP   {NORMAL, KEY_UP}
-#define KC_NLCK {NORMAL, KEY_NUMLOCK}
-#define KC_PSLS {NORMAL, KEY_KP_SLASH}
-#define KC_PAST {NORMAL, KEY_KP_ASTERISK}
-#define KC_PMNS {NORMAL, KEY_KP_MINUS}
-#define KC_PPLS {NORMAL, KEY_KP_PLUS}
-#define KC_PENT {NORMAL, KEY_KP_ENTER}
-#define KC_P1   {NORMAL, KEY_KP_1}
-#define KC_P2   {NORMAL, KEY_KP_2}
-#define KC_P3   {NORMAL, KEY_KP_3}
-#define KC_P4   {NORMAL, KEY_KP_4}
-#define KC_P5   {NORMAL, KEY_KP_5}
-#define KC_P6   {NORMAL, KEY_KP_6}
-#define KC_P7   {NORMAL, KEY_KP_7}
-#define KC_P8   {NORMAL, KEY_KP_8}
-#define KC_P9   {NORMAL, KEY_KP_9}
-#define KC_P0   {NORMAL, KEY_KP_0}
-#define KC_PDOT {NORMAL, KEY_KP_DOT}
-#define KC_NUBS {NORMAL, KEY_NONUS_BSLASH}
-#define KC_APP  {NORMAL, KEY_APPLICATION}
-#define KC_PEQL {NORMAL, KEY_KP_EQUAL}
-#define KC_PCMM {NORMAL, KEY_KP_COMMA}
-#define KC_BRK  {NORMAL, KEY_PAUSE}
-#define KC_ERAS {NORMAL, KEY_ALT_ERASE}
-#define KC_CLR  {NORMAL, KEY_CLEAR}
+#define KC_A    {false, KEY_A}
+#define KC_B    {false, KEY_B}
+#define KC_C    {false, KEY_C}
+#define KC_D    {false, KEY_D}
+#define KC_E    {false, KEY_E}
+#define KC_F    {false, KEY_F}
+#define KC_G    {false, KEY_G}
+#define KC_H    {false, KEY_H}
+#define KC_I    {false, KEY_I}
+#define KC_J    {false, KEY_J}
+#define KC_K    {false, KEY_K}
+#define KC_L    {false, KEY_L}
+#define KC_M    {false, KEY_M}
+#define KC_N    {false, KEY_N}
+#define KC_O    {false, KEY_O}
+#define KC_P    {false, KEY_P}
+#define KC_Q    {false, KEY_Q}
+#define KC_R    {false, KEY_R}
+#define KC_S    {false, KEY_S}
+#define KC_T    {false, KEY_T}
+#define KC_U    {false, KEY_U}
+#define KC_V    {false, KEY_V}
+#define KC_W    {false, KEY_W}
+#define KC_X    {false, KEY_X}
+#define KC_Y    {false, KEY_Y}
+#define KC_Z    {false, KEY_Z}
+#define KC_1    {false, KEY_1}
+#define KC_2    {false, KEY_2}
+#define KC_3    {false, KEY_3}
+#define KC_4    {false, KEY_4}
+#define KC_5    {false, KEY_5}
+#define KC_6    {false, KEY_6}
+#define KC_7    {false, KEY_7}
+#define KC_8    {false, KEY_8}
+#define KC_9    {false, KEY_9}
+#define KC_0    {false, KEY_0}
+#define KC_ENT  {false, KEY_ENTER}
+#define KC_ESC  {false, KEY_ESCAPE}
+#define KC_BSPC {false, KEY_BSPACE}
+#define KC_TAB  {false, KEY_TAB}
+#define KC_SPC  {false, KEY_SPACE}
+#define KC_MINS {false, KEY_MINUS}
+#define KC_EQL  {false, KEY_EQUAL}
+#define KC_LBRC {false, KEY_LBRACKET}
+#define KC_RBRC {false, KEY_RBRACKET}
+#define KC_BSLS {false, KEY_BSLASH}
+#define KC_NUHS {false, KEY_NONUS_HASH}
+#define KC_SCLN {false, KEY_SCOLON}
+#define KC_QUOT {false, KEY_QUOTE}
+#define KC_GRV  {false, KEY_GRAVE}
+#define KC_COMM {false, KEY_COMMA}
+#define KC_DOT  {false, KEY_DOT}
+#define KC_SLSH {false, KEY_SLASH}
+#define KC_CAPS {false, KEY_CAPSLOCK}
+#define KC_F1   {false, KEY_F1}
+#define KC_F2   {false, KEY_F2}
+#define KC_F3   {false, KEY_F3}
+#define KC_F4   {false, KEY_F4}
+#define KC_F5   {false, KEY_F5}
+#define KC_F6   {false, KEY_F6}
+#define KC_F7   {false, KEY_F7}
+#define KC_F8   {false, KEY_F8}
+#define KC_F9   {false, KEY_F9}
+#define KC_F10  {false, KEY_F10}
+#define KC_F11  {false, KEY_F11}
+#define KC_F12  {false, KEY_F12}
+#define KC_PSCR {false, KEY_PSCREEN}
+#define KC_SLCK {false, KEY_SCKLOCK}
+#define KC_PAUS {false, KEY_PAUSE}
+#define KC_INS  {false, KEY_INSERT}
+#define KC_HOME {false, KEY_HOME}
+#define KC_PGUP {false, KEY_PGUP}
+#define KC_DEL  {false, KEY_DELETE}
+#define KC_END  {false, KEY_END}
+#define KC_PGDN {false, KEY_PGDOWN}
+#define KC_RGHT {false, KEY_RIGHT}
+#define KC_LEFT {false, KEY_LEFT}
+#define KC_DOWN {false, KEY_DOWN}
+#define KC_UP   {false, KEY_UP}
+#define KC_NLCK {false, KEY_NUMLOCK}
+#define KC_PSLS {false, KEY_KP_SLASH}
+#define KC_PAST {false, KEY_KP_ASTERISK}
+#define KC_PMNS {false, KEY_KP_MINUS}
+#define KC_PPLS {false, KEY_KP_PLUS}
+#define KC_PENT {false, KEY_KP_ENTER}
+#define KC_P1   {false, KEY_KP_1}
+#define KC_P2   {false, KEY_KP_2}
+#define KC_P3   {false, KEY_KP_3}
+#define KC_P4   {false, KEY_KP_4}
+#define KC_P5   {false, KEY_KP_5}
+#define KC_P6   {false, KEY_KP_6}
+#define KC_P7   {false, KEY_KP_7}
+#define KC_P8   {false, KEY_KP_8}
+#define KC_P9   {false, KEY_KP_9}
+#define KC_P0   {false, KEY_KP_0}
+#define KC_PDOT {false, KEY_KP_DOT}
+#define KC_NUBS {false, KEY_NONUS_BSLASH}
+#define KC_APP  {false, KEY_APPLICATION}
+#define KC_PEQL {false, KEY_KP_EQUAL}
+#define KC_PCMM {false, KEY_KP_COMMA}
+#define KC_BRK  {false, KEY_PAUSE}
+#define KC_ERAS {false, KEY_ALT_ERASE}
+#define KC_CLR  {false, KEY_CLEAR}
 /* Japanese specific */
-#define KC_ZKHK {NORMAL, KEY_GRAVE}
-#define KC_RO   {NORMAL, KEY_INT1}
-#define KC_KANA {NORMAL, KEY_INT2}
-#define KC_JYEN {NORMAL, KEY_INT3}
-#define KC_HENK {NORMAL, KEY_INT4}
-#define KC_MHEN {NORMAL, KEY_INT5}
+#define KC_ZKHK {false, KEY_GRAVE}
+#define KC_RO   {false, KEY_INT1}
+#define KC_KANA {false, KEY_INT2}
+#define KC_JYEN {false, KEY_INT3}
+#define KC_HENK {false, KEY_INT4}
+#define KC_MHEN {false, KEY_INT5}
 
 
+/* Long names */
 /* USB HID Keyboard/Keypad Usage(0x07) */
 enum hid_keyboard_keypad_usage {
     KEY_NO               = 0x00,

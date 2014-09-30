@@ -280,8 +280,8 @@ static volatile uint8_t debug_flush_timer=0;
 // 16=right ctrl, 32=right shift, 64=right alt, 128=right gui
 uint8_t keyboard_modifier_keys=0;
 
-// which keys are currently pressed, up to MAX_PKEYS (6) keys may be down at once
-uint8_t keyboard_keys[MAX_PKEYS]={0,0,0,0,0,0};
+// which keys are currently pressed, up to QUEUE_LENGTH (6) keys may be down at once
+uint8_t keyboard_keys[QUEUE_LENGTH]={0,0,0,0,0,0};
 
 // protocol setting from the host.  We use exactly the same report
 // either way, so this variable only stores the setting since we
@@ -361,7 +361,7 @@ int8_t usb_keyboard_send(void) {
   }
   UEDATX = keyboard_modifier_keys;
   UEDATX = 0;
-  for (i=0; i<MAX_PKEYS; i++) {
+  for (i=0; i<QUEUE_LENGTH; i++) {
     UEDATX = keyboard_keys[i];
   }
   UEINTX = 0x3A;
@@ -524,7 +524,7 @@ ISR(USB_GEN_vect) {
           keyboard_idle_count = 0;
           UEDATX = keyboard_modifier_keys;
           UEDATX = 0;
-          for (i=0; i<MAX_PKEYS; i++) {
+          for (i=0; i<QUEUE_LENGTH; i++) {
             UEDATX = keyboard_keys[i];
           }
           UEINTX = 0x3A;
@@ -692,7 +692,7 @@ ISR(USB_COM_vect) {
           usb_wait_in_ready();
           UEDATX = keyboard_modifier_keys;
           UEDATX = 0;
-          for (i=0; i<MAX_PKEYS; i++) {
+          for (i=0; i<QUEUE_LENGTH; i++) {
             UEDATX = keyboard_keys[i];
           }
           usb_send_in();

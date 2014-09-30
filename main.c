@@ -33,7 +33,7 @@
 /* A key can be either a normal character or a modifier key. A struct
    is used to keep track of the keycode and type of key. Layouts are
    defined in `KEYBOARD_MODEL_FILE`. */
-struct {uint8_t type; uint8_t value;} layout[] = KEYBOARD_LAYOUT;
+struct {uint8_t is_modifier; uint8_t value;} layout[] = KEYBOARD_LAYOUT;
 
 /* Each keys bounce status is represented by an 8-bit integer. The
    lowest bit is set to 1 by the polling routine if the key is seen as
@@ -49,12 +49,12 @@ struct {uint8_t type; uint8_t value;} layout[] = KEYBOARD_LAYOUT;
 
    We also need to keep track of which keys that are pressed and
    not. */
-struct {uint8_t pressed; uint8_t bounce;} key[NKEY];
+struct {uint8_t pressed; uint8_t bounce;} key[NUMBER_OF_KEYS];
 
 /* NO_KEY is the value used for the empty places in the queue */
 #define NO_KEY 255
 /* queue contains the keys that are to be sent in the HID packet */
-uint8_t queue[MAX_PKEYS+1] = { [0 ... MAX_PKEYS] = NO_KEY };
+uint8_t queue[QUEUE_LENGTH+1] = { [0 ... QUEUE_LENGTH] = NO_KEY };
 /* mod_keys is the bit pattern corresponding to pressed modifier keys */
 uint8_t mod_keys = 0;
 
@@ -65,7 +65,7 @@ void key_release(uint8_t k);
 void debug_print(void);
 
 
-ISR(SCAN_INTERRUPT_FUNCTION) {
+ISR(TIMER0_COMPA_vect) {
   /* We want to be able to scan often enough to fill the debounce
      register within the specified debounce time of the switches (5ms
      for Cherry MX). We do NOT want to enter a call to another scan
@@ -105,9 +105,9 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
      positive read of the poll. The release event on the other hand
      should always be debounced. Otherwise there would be several key
      presses on both the press and release event due to bounce. */
-  for(uint8_t r = 0, k = 0; r < NROW; r++) {
+  for(uint8_t r = 0, k = 0; r < NUMBER_OF_ROWS; r++) {
     pull_row(r);
-    for(uint8_t c = 0; c < NCOL; c++, k++) {
+    for(uint8_t c = 0; c < NUMBER_OF_COLUMNS; c++, k++) {
       key[k].bounce |= probe_column(c);
 
       if(key[k].bounce == 0b01111111 && !key[k].pressed)
@@ -152,7 +152,7 @@ int main(void) {
    send it. */
 void send(void) {
   uint8_t i;
-  for(i = 0; i < MAX_PKEYS; i++)
+  for(i = 0; i < QUEUE_LENGTH; i++)
     keyboard_keys[i] = queue[i] != NO_KEY ? layout[queue[i]].value : 0;
   keyboard_modifier_keys = mod_keys;
   usb_keyboard_send();
@@ -167,7 +167,7 @@ void key_press(uint8_t k) {
   if(IS_MODIFIER(layout[k]))
     mod_keys |= layout[k].value;
   else {
-    for(i = MAX_PKEYS-1; i > 0; i--)
+    for(i = QUEUE_LENGTH-1; i > 0; i--)
       queue[i] = queue[i-1];
     queue[0] = k;
   }
@@ -183,10 +183,10 @@ void key_release(uint8_t k) {
   if(IS_MODIFIER(layout[k]))
     mod_keys &= ~layout[k].value;
   else {
-    for(i = 0; i < MAX_PKEYS; i++)
+    for(i = 0; i < QUEUE_LENGTH; i++)
       if(queue[i]==k)
         break;
-    for(i = i; i < MAX_PKEYS; i++)
+    for(i = i; i < QUEUE_LENGTH; i++)
       queue[i] = queue[i+1];
   }
   send();
@@ -199,7 +199,7 @@ void init(void) {
   while(!usb_configured());
   keyboard_init();
   mod_keys = 0;
-  for(uint8_t k = 0; k < NKEY; k++)
+  for(uint8_t k = 0; k < NUMBER_OF_KEYS; k++)
     key[k].bounce = key[k].pressed = 0x00;
   sei();  // Enable interrupts
 }
@@ -214,7 +214,7 @@ void debug_print(void) {
     for(uint8_t i = 0; i < 7; i++)
       phex(queue[i]);
     print("\n");
-    for(uint8_t k = 0; k < NKEY; k++)
+    for(uint8_t k = 0; k < NUMBER_OF_KEYS; k++)
       phex(key[k].bounce);
     print("\n");
   }
