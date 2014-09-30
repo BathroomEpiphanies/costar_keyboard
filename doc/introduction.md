@@ -34,3 +34,8 @@ ghosting where it looks like keys that aren't in fact pressed looks
 like they are, diodes are usually added to the matrix. Ghosting will
 not be explained here.
 
+The Costar matrix
+http://deskthority.net/wiki/Costar_Matrix
+
+Costar replacement controllers schematics
+http://deskthority.net/wiki/Costar_replacement_controllers#Schematic
