@@ -32,7 +32,7 @@
 #include KEYBOARD_MODEL_FILE
 
 struct {uint8_t *const pin; const uint8_t bit;} column_pins[NUMBER_OF_COLUMNS] = COLUMN_PINS;
-const   uint8_t                                 row_bits[NUMBER_OF_ROWS]    = ROW_BITS;
+const   uint8_t                                 row_bits[NUMBER_OF_ROWS]       = ROW_BITS;
 
 /* The `pin` struct describes a AVR pin.
  * See <http://maxembedded.com/2011/06/10/port-operations-in-avr/> for an

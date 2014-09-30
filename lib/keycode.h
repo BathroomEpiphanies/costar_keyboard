@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KEYCODE_H
 #define KEYCODE_H
 
-#define IS_MODIFIER(key) ((key).is_modifier)
-
 /* Definitions of keys. 
 
    There are two types of keys on a keyboard. Normal keys and modifier

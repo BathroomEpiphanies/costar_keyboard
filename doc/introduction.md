@@ -6,7 +6,7 @@ which keys are pressed and reports this to the computer. The keyboards
 from the manufacturer Costar which the controllers this firmware is
 intended to be run on are of this type.
 
-Microcontroller generally have what is called GPIO pins (General
+Microcontrollers generally have what is called GPIO pins (General
 Purpose Input/Output), these may be able to read digital (or analogue)
 values, or output digital (or analogue values). A mechanical switch
 keyboard will only need to deal with digital signals. These pins when

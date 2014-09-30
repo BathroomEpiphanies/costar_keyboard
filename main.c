@@ -58,7 +58,7 @@ struct {uint8_t is_modifier; uint8_t value;} layout[] = KEYBOARD_LAYOUT;
 
    We also need to keep track of which keys that are pressed and
    not. */
-struct {uint8_t pressed; uint8_t bounce;} key[NUMBER_OF_KEYS];
+struct {bool is_pressed; uint8_t bounce;} key[NUMBER_OF_KEYS];
 
 /* NO_KEY is the value used for the empty places in the queue */
 #define NO_KEY 255
@@ -108,7 +108,7 @@ void init(void) {
    * used to store the state of the keys. */
   mod_keys = 0;
   for(uint8_t k = 0; k < NUMBER_OF_KEYS; k++)
-    key[k].bounce = key[k].pressed = 0x00;
+    key[k].bounce = key[k].is_pressed = false;
 
   /* The last step is to enable the interrupts. This is needed because
    * a timed interrupt will be used to poll the state of the keys. */
@@ -170,9 +170,9 @@ ISR(TIMER0_COMPA_vect) {
     for(uint8_t c = 0; c < NUMBER_OF_COLUMNS; c++, k++) {
       key[k].bounce |= probe_column(c);
 
-      if(key[k].bounce == 0b01111111 && !key[k].pressed)
+      if(key[k].bounce == 0b01111111 && !key[k].is_pressed)
         key_press(k);
-      if(key[k].bounce == 0b10000000 &&  key[k].pressed)
+      if(key[k].bounce == 0b10000000 &&  key[k].is_pressed)
         key_release(k);
 
       key[k].bounce <<= 1;
@@ -204,8 +204,8 @@ ISR(TIMER0_COMPA_vect) {
    added to the modifier byte. */
 void key_press(uint8_t k) {
   uint8_t i;
-  key[k].pressed = true;
-  if(IS_MODIFIER(layout[k]))
+  key[k].is_pressed = true;
+  if(layout[k].is_modifier)
     mod_keys |= layout[k].value;
   else {
     for(i = QUEUE_LENGTH-1; i > 0; i--)
@@ -220,8 +220,8 @@ void key_press(uint8_t k) {
    pattern is removed from the modifier byte. */
 void key_release(uint8_t k) {
   uint8_t i;
-  key[k].pressed = false;
-  if(IS_MODIFIER(layout[k]))
+  key[k].is_pressed = false;
+  if(layout[k].is_modifier)
     mod_keys &= ~layout[k].value;
   else {
     for(i = 0; i < QUEUE_LENGTH; i++)
