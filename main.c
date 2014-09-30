@@ -23,11 +23,20 @@
  * SOFTWARE.
  */
 
+/* The `main.c` file contains the system entry point function `main`
+ * (the first function to be executed by the system) and the timer
+ * interrupt handler, that is the principal function of the firmware,
+ * the one that takes care of detecting the key presses and sending
+ * them to the computer via USB.
+ */
+
 #include <avr/pgmspace.h>
 #include "lib/usb_keyboard_debug.h"
 #include "lib/print.h"
 #include "hw_interface.h"
-/* Include the correct keyboard model. Defined in Makefile. */
+/* This code is very generic and relies on keyboard-specific constants
+ * to hide many details. The keyboard model is chosen setting the
+ * variable `MODEL` in the `Makefile`. */
 #include KEYBOARD_MODEL_FILE
 
 /* A key can be either a normal character or a modifier key. A struct
@@ -58,14 +67,65 @@ uint8_t queue[QUEUE_LENGTH+1] = { [0 ... QUEUE_LENGTH] = NO_KEY };
 /* mod_keys is the bit pattern corresponding to pressed modifier keys */
 uint8_t mod_keys = 0;
 
+/* We forward-declare these local functions. */
+
 void init(void);
 void send(void);
 void key_press(uint8_t k);
 void key_release(uint8_t k);
 void debug_print(void);
 
+/* ### main
+ *
+ * Call initialization functions and start polling.
+ *
+ * Once the polling timer is enabled, the `main` function spins
+ * forever. This is normal, as all the work is done in the interrupt
+ * handler called every time the timer fires.
+ */
+int main(void) {
+  init();
+  poll_timer_enable(); //Turn interrupt polling on
+  for(;;);
+}
 
-ISR(SCAN_INTERRUPT_FUNCTION) {
+
+/* ### init
+ *
+ * Call initialization functions and enable interrupts.
+ */
+void init(void) {
+  /* The first thing to init is the USB stack. We also wait for it to
+   * be ready, so we will be able to read keycodes in `keyboard_init`. */
+  usb_init();
+  while(!usb_configured());
+
+  /* The keyboard initialization will take care of setting the
+   * appropriate HW registers and timers. */
+  keyboard_init();
+
+  /* What is left to do is to initialize the global variables
+   * used to store the state of the keys. */
+  mod_keys = 0;
+  for(uint8_t k = 0; k < NUMBER_OF_KEYS; k++)
+    key[k].bounce = key[k].pressed = 0x00;
+
+  /* The last step is to enable the interrupts. This is needed because
+   * a timed interrupt will be used to poll the state of the keys. */
+  sei();
+}
+
+
+/* ### timer interrupt handler
+ *
+ * Scan for pressed keys, record them and produce key press
+ * events if necessary.
+ *
+ * This function is the workhorse of the keyboard firmware. This is
+ * the code that analyses the state of the matrix of switches every
+ * millisecond, probing each switch row by row.
+ */
+ISR(TIMER0_COMPA_vect) {
   /* We want to be able to scan often enough to fill the debounce
      register within the specified debounce time of the switches (5ms
      for Cherry MX). We do NOT want to enter a call to another scan
@@ -140,25 +200,6 @@ ISR(SCAN_INTERRUPT_FUNCTION) {
 }
 
 
-/* Call initialization functions and start polling. */
-int main(void) {
-  init();
-  poll_timer_enable(); //Turn interrupt polling on
-  for(;;);
-}
-
-
-/* Translate internal key numers to keycodes, build a HID packet and
-   send it. */
-void send(void) {
-  uint8_t i;
-  for(i = 0; i < QUEUE_LENGTH; i++)
-    keyboard_keys[i] = queue[i] != NO_KEY ? layout[queue[i]].value : 0;
-  keyboard_modifier_keys = mod_keys;
-  usb_keyboard_send();
-}
-
-
 /* Add key to the send queue. If it is a modifier its bit pattern is
    added to the modifier byte. */
 void key_press(uint8_t k) {
@@ -193,15 +234,25 @@ void key_release(uint8_t k) {
 }
 
 
-/* Call initialization functions. */
-void init(void) {
-  usb_init();
-  while(!usb_configured());
-  keyboard_init();
-  mod_keys = 0;
-  for(uint8_t k = 0; k < NUMBER_OF_KEYS; k++)
-    key[k].bounce = key[k].pressed = 0x00;
-  sei();  // Enable interrupts
+/* ### send
+ *
+ * Send all the queued keys via USB.
+ *
+ * To send the keycodes, the first `QUEUE_LENGTH`-1 slots of the
+ * queue are searched. If a key number is found in the queue, it is
+ * converted into the corresponding keycode (using the `layout`
+ * mapping) and saved in the `keyboard_keys` array.
+ *
+ * The global variables `keyboard_keys` and  `keyboard_modifier_keys`
+ * are used by the `usb_keyboard_send` function to build a HID
+ * packet and send it.
+ */
+void send(void) {
+  uint8_t i;
+  for(i = 0; i < QUEUE_LENGTH; i++)
+    keyboard_keys[i] = queue[i] != NO_KEY ? layout[queue[i]].value : 0;
+  keyboard_modifier_keys = mod_keys;
+  usb_keyboard_send();
 }
 
 
