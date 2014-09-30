@@ -599,6 +599,7 @@ DOC_MD=$(addprefix doc/,$(DOC_SOURCES:.c=.md))
 doc/tutorial.html: $(DOC_MD) doc/_header.html doc/_footer.html
 	rm -f $@
 	cat doc/_header.html >> $@
+	../stmd/stmd doc/introduction.md >> $@
 	for md in $(DOC_MD) ; do ../stmd/stmd $$md >> $@ ; done
 	cat doc/_footer.html >> $@
 
