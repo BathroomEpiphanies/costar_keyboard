@@ -25,7 +25,7 @@
 
 #include "lib/avr_extra.h"
 #include "hw_interface.h"
-#include KEYBOARD_MODEL
+#include KEYBOARD_MODEL_FILE
 
 struct {uint8_t *const pin; const uint8_t bit;} column_pins[NCOL] = COLUMN_PINS;
 const   uint8_t                                 row_bits[NROW]    = ROW_BITS;
