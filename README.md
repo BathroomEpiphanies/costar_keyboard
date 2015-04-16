@@ -63,7 +63,7 @@ B_LOADER = \"jmp\ 0x7000\"
 Then run the `make` command in a terminal. Always run a `make clean` first.
 
 ```sh
-$ make clean; make
+$ make clean && make
 ```
 
 If the process is successful, you would find binary firmware with
