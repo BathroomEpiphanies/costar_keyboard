@@ -184,8 +184,8 @@ ISR(TIMER0_COMPA_vect) {
      activated. In this case when both shift keys are pressed at the
      same time.
      jump_bootloader is defined in usb_keyboard.c */
-  // if(mod_keys == (uint8_t)(KC_LSFT | KC_RSFT))
-  //   jump_bootloader();
+  if(mod_keys == 0x22)
+    jump_bootloader();
 
   /* Update the keyboard keyboard LEDs.
      update_leds is defined in `hw_interface.c` */
