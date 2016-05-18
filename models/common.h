@@ -8,11 +8,11 @@
 #include <util/delay.h>
 
 /* Extra definitions for AVR stuff. */
-#include "../lib/avr_extra.h"
+#include "../libraries/avr_extra.h"
 /* include keycode definitions. */
-#include "../lib/keycode.h"
+#include "../libraries/keycode.h"
 
-#define STR_MANUFACTURER L"Bathroom Epiphanies, Costar Keyboard -"
+#define STR_MANUFACTURER L"Bathroom Epiphanies, Costar Debugger -"
 #define VENDOR_ID        0x16C0
 
 #define NUMBER_OF_ROWS     18
