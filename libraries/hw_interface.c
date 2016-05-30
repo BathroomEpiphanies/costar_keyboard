@@ -41,11 +41,12 @@ struct pin {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;};
 
 void pull_row(uint8_t r) {
   ROW_PORT = (ROW_PORT & ~ROW_MASK) | row_bits[r];
-  _delay_us(1);
+  _delay_us(16);
 }
 
 void release_rows(void) {
-  PORTD |= ROW_MASK;
+  ROW_PORT |= ROW_MASK;
+  _delay_us(16);
 }
 
 bool probe_column(uint8_t c) {
@@ -76,6 +77,10 @@ void update_leds(uint8_t keyboard_leds) {
 #elif defined paw_20130602_h__
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
+  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
+#elif defined paw_20160418_h__
+  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 3) & 0b00100000); // Scroll Lock
+  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 7) & 0b10000000); // Num Lock
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
 #elif defined petal_20131001_h__
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock

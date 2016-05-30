@@ -38,6 +38,17 @@ void print_P(const char *s) {
 	}
 }
 
+
+void print_S(char *s) {
+	char c;
+  while(1) {
+    c = *(s++);
+		if (!c) break;
+		if (c == '\n') usb_debug_putchar('\r');
+		usb_debug_putchar(c);
+  }
+}
+
 void phex1(unsigned char c) {
 	usb_debug_putchar(c + ((c < 10) ? '0' : 'A' - 10));
 }

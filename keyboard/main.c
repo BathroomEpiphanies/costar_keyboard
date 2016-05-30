@@ -33,7 +33,8 @@
 #include <avr/pgmspace.h>
 #include "../libraries/usb_keyboard_debug.h"
 #include "../libraries/print.h"
-#include "hw_interface.h"
+#include "../libraries/hw_interface.h"
+
 /* This code is very generic and relies on keyboard-specific constants
  * to hide many details. The keyboard model is chosen setting the
  * variable `MODEL` in the `Makefile`. */

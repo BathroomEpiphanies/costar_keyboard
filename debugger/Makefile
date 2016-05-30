@@ -13,7 +13,7 @@
 #MODEL = petal_20131001
 #MODEL = squid_20140518
 
-# Raise an error if MODEL or LAYOUT are used but have not been selected
+# Raise an error if MODEL is used but have not been selected
 MODEL ?= $(error MODEL is not set; uncomment the appropriate MODEL in Makefile)
 
 MCU = atmega32u2
@@ -620,4 +620,4 @@ $(shell mkdir $(OBJDIR) 2>/dev/null)
 # Listing of phony targets.
 .PHONY : all begin finish end sizebefore sizeafter gccversion \
 build elf hex eep lss sym coff extcoff \
-clean clean_list program debug gdb-config doc
+clean clean_list program debug gdb-config

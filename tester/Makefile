@@ -14,16 +14,6 @@
 #MODEL = petal_20131001
 #MODEL = squid_20140518
 
-#LAYOUT = ANSI_ISO_JIS
-#LAYOUT = DVORAK
-#LAYOUT = TEST_FLAKE
-#LAYOUT = TEST_COLS
-#LAYOUT = TEST_ROWS
-
-# Raise an error if MODEL or LAYOUT are used but have not been selected
-MODEL ?= $(error MODEL is not set; uncomment the appropriate MODEL in Makefile)
-LAYOUT ?= $(error LAYOUT is not set; uncomment the appropriate LAYOUT in Makefile)
-
 MCU = atmega32u2
 F_CPU = 16000000
 B_LOADER = \"jmp\ 0x7000\"
@@ -447,7 +437,7 @@ sizebefore:
 sizeafter:
 	@if test -f $(TARGET).elf; then echo; echo $(MSG_SIZE_AFTER); $(ELFSIZE); \
 	2>/dev/null; echo; fi
-	cp main.hex ../binaries/$(MODEL)_$(LAYOUT).hex
+	cp main.hex ../binaries/$(MODEL)_tester.hex
 
 
 
@@ -615,7 +605,6 @@ clean_list :
 	rm -f *.d 	../libraries/*.d
 	rm -f *.i 	../libraries/*.i
 	rm -f *~    ../libraries/*~
-	rm -f doc/tutorial.html
 
 
 # Create object files directory
@@ -629,4 +618,4 @@ $(shell mkdir $(OBJDIR) 2>/dev/null)
 # Listing of phony targets.
 .PHONY : all begin finish end sizebefore sizeafter gccversion \
 build elf hex eep lss sym coff extcoff \
-clean clean_list program debug gdb-config doc
+clean clean_list program debug gdb-config

@@ -12,7 +12,7 @@
 /* include keycode definitions. */
 #include "../libraries/keycode.h"
 
-#define STR_MANUFACTURER L"Bathroom Epiphanies, Costar Debugger -"
+#define STR_MANUFACTURER L"Bathroom Epiphanies, Costar Keyboard -"
 #define VENDOR_ID        0x16C0
 
 #define NUMBER_OF_ROWS     18

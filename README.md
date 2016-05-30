@@ -1,7 +1,7 @@
 # Firmwares for keyboard controllers
 
-Custom firmwares to replace stock Costar controllers allowing you to
-program your keyboard.
+Firmwares for custom controllers to replace stock Costar controllers
+allowing you to program your keyboard.
 
 Firmwares include:
 
@@ -10,14 +10,15 @@ Firmwares include:
 * The Black Petal (for Rosewill full size)
 * The Pegasus Hoof (for Filco Majestouch Tenkeyless)
 
-For more information, please see the [Costar replacement controllers page
-on the Deskthority Wiki](http://deskthority.net/wiki/Costar_replacement_controllers).
+For more information, please see the [Costar replacement controllers
+page on the Deskthority
+Wiki](http://deskthority.net/wiki/Costar_replacement_controllers).
 
 ## Intentions
 
-One goal of this project is to make a keyboard firmware for ATmega32U2 based
-daughter boards as simple (within reason) as possible. It is supposed to be a
-first introduction to how a keyboard works.
+One goal of this project is to make a keyboard firmware for ATmega32U2
+based daughter boards as simple (within reason) as possible. It is
+supposed to be a first introduction to how a keyboard works.
 
 Features will be limited to the following topics:
 
@@ -27,11 +28,11 @@ Features will be limited to the following topics:
 * Basic de-bouncing
 * PWM control for LEDs
 
-For more advanced features there are other keyboard firmwares already way ahead
-of this project. If you want to contribute by increasing clarity,
-understandability or simplicity, please do.
-Also feel free to fork, clone or copy selected parts to diverge however
-you like from the constraints of this project.
+For more advanced features there are other keyboard firmwares already
+way ahead of this project. If you want to contribute by increasing
+clarity, understandability or simplicity, please do.  Also feel free
+to fork, clone or copy selected parts to diverge however you like from
+the constraints of this project.
 
 ## Other keyboard firmwares
 
@@ -45,7 +46,12 @@ Forks from this project:
 * https://github.com/pa3zo6/costar_keyboard
 * (add more here..)
 
-## Compiling firmwares
+## Controller firmwares
+
+Regular keyboard firmwares are located in the folder
+*keyboards*. Compiled binaries will end up in the folder *binaries*.
+
+### Compiling
 
 In order to compile firmwares, [`avr-gcc`](http://www.nongnu.org/avr-libc/) is
 required. Please ensure you have it installed before moving to next step.
@@ -69,15 +75,30 @@ $ make clean && make
 If the process is successful, you would find binary firmware with
 extension `.hex` inside the binaries folder.
 
-## Flashing the controller
+### Flashing the controller
 
 Make sure you install [`dfu-programmer`](http://dfu-programmer.github.io/) first.
 
 ```sh
 $ dfu-programmer atmega32u2 erase
-$ dfu-programmer atmega32u2 flash binaries/[flake|paw|hoof|petal]_ANSI_ISO_JIS.hex
+$ dfu-programmer atmega32u2 flash binaries/[flake|paw|hoof|petal]_[ANSI_ISO_JIS|DVORAK].hex
 $ dfu-programmer atmega32u2 start
 ```
+
+## Testing and debugging firmwares
+
+For debugging needs the firmware in the folder *debugger* can be
+used. This firmware registers as a keyboard. Every half second or so
+it will print a row with with (letter,number) pairs describing the
+rows and columns of the currently pressed keys. This can be useful to
+find hardware errors. The keyboard LEDs will also be flashed every
+cycle.
+
+The *tester* firmares are for production testing only.
+
+### Compiling and Flashing
+
+See above section under Controller firmwares.
 
 ## License
 
