@@ -10,8 +10,10 @@
 #MODEL = hoof_20131001
 #MODEL = hoof_20150108
 #MODEL = paw_20130602
+#MODEL = paw_20160418
 #MODEL = petal_20131001
 #MODEL = squid_20140518
+#MODEL = talk_20151102
 
 # Raise an error if MODEL is used but have not been selected
 MODEL ?= $(error MODEL is not set; uncomment the appropriate MODEL in Makefile)
@@ -71,7 +73,7 @@ TARGET = main
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC =	main.c ../libraries/usb_keyboard_debug.c ../libraries/print.c
+SRC =	main.c ../libraries/hw_interface.c ../libraries/usb_keyboard_debug.c ../libraries/print.c
 
 # Output format. (can be srec, ihex, binary)
 FORMAT = ihex

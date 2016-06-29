@@ -41,12 +41,12 @@ struct pin {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;};
 
 void pull_row(uint8_t r) {
   ROW_PORT = (ROW_PORT & ~ROW_MASK) | row_bits[r];
-  _delay_us(16);
+  _delay_us(1);
 }
 
 void release_rows(void) {
   ROW_PORT |= ROW_MASK;
-  _delay_us(16);
+  _delay_us(1);
 }
 
 bool probe_column(uint8_t c) {
@@ -70,10 +70,6 @@ void update_leds(uint8_t keyboard_leds) {
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 7) & 0b10000000); // Caps Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 4) & 0b00100000); // Win Lock (used as Num Lock)
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
-#elif defined floice_20151102_h__
-  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 6) & 0b10000000); // Caps Lock
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Win Lock (used as Num Lock)
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
 #elif defined paw_20130602_h__
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
@@ -90,6 +86,10 @@ void update_leds(uint8_t keyboard_leds) {
   PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
   PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
   PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
+#elif defined talk_20151102_h__
+  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 6) & 0b10000000); // Caps Lock
+  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Win Lock (used as Num Lock)
+  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
 #else
   #error Do not know how to implement update_leds()
 #endif

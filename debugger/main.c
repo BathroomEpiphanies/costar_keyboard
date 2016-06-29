@@ -35,20 +35,16 @@
  * 
  */
 
-#include "../libraries/avr_extra.h"
-#include "../libraries/print.h"
+#include <avr/pgmspace.h>
 #include "../libraries/usb_keyboard_debug.h"
-#include <avr/pgmspace.h>
-#include <stdbool.h>
-#include <avr/pgmspace.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
+#include "../libraries/print.h"
+#include "../libraries/hw_interface.h"
 
 #include KEYBOARD_MODEL_FILE
 
 struct pin {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;};
-struct {uint8_t *const pin; const uint8_t bit;} column_pins[NUMBER_OF_COLUMNS] = COLUMN_PINS;
-const   uint8_t                                 row_bits[NUMBER_OF_ROWS]       = ROW_BITS;
+//struct {uint8_t *const pin; const uint8_t bit;} column_pins[NUMBER_OF_COLUMNS] = COLUMN_PINS;
+//const   uint8_t                                 row_bits[NUMBER_OF_ROWS]       = ROW_BITS;
 uint8_t leds = 0b00000111, mask = 0b00000111;
 
 uint8_t alp_index[] = {KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G, KEY_H, KEY_I, KEY_J,

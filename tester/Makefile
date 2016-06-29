@@ -13,6 +13,7 @@
 #MODEL = paw_20160418
 #MODEL = petal_20131001
 #MODEL = squid_20140518
+#MODEL = talk_20151102
 
 MCU = atmega32u2
 F_CPU = 16000000

@@ -12,6 +12,9 @@
 
 char tmp_str[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
+uint8_t leds = 0b00000000, mask = 0b00000111;
+
+
 int main(void) {
   CPU_PRESCALE(0);
   MCUCR |= 0x80; MCUCR |= 0x80;
@@ -51,7 +54,8 @@ int main(void) {
           print_S("0");
       }
       print_S("\n");
-      update_leds(keyboard_leds);
+      leds = mask-leds;
+      update_leds(leds);
       _delay_ms(200);
     }
   }

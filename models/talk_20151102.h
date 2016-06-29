@@ -1,7 +1,7 @@
 /* CM Storm Quick Fire Rapid replacement controller board parameters. */
 
-#ifndef floice_20151102_h__
-#define floice_20151102_h__
+#ifndef talk_20151102_h__
+#define talk_20151102_h__
 
 #include "common.h"
 
