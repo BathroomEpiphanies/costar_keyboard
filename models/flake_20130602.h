@@ -8,8 +8,13 @@
 #define STR_PRODUCT      L"CM Storm Quick Fire Rapid"
 #define PRODUCT_ID       0x047D
 
+#define NUM_LOCK(x)    ((x) == ON ? (PORTC &= ~0b00100000) : (PORTC |= 0b00100000))
+#define CAPS_LOCK(x)   ((x) == ON ? (PORTB &= ~0b10000000) : (PORTB |= 0b10000000))
+#define SCROLL_LOCK(x) ((x) == ON ? (PORTC &= ~0b01000000) : (PORTC |= 0b01000000))
+
 #define ROW_PORT  PORTB
 #define ROW_MASK  0b01111110
+
 #define ROW_BITS \
   {              \
     0b00111010,  \
@@ -29,7 +34,8 @@
     0b00111000,  \
     0b01110010,  \
     0b00011110,  \
-    0b00111110   \
+    0b00111110,  \
+    ROW_MASK     \
   }
 
 #define COLUMN_PINS \

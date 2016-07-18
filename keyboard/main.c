@@ -30,15 +30,15 @@
  * them to the computer via USB.
  */
 
-#include <avr/pgmspace.h>
-#include "../libraries/usb_keyboard_debug.h"
-#include "../libraries/print.h"
-#include "../libraries/hw_interface.h"
-
 /* This code is very generic and relies on keyboard-specific constants
  * to hide many details. The keyboard model is chosen setting the
  * variable `MODEL` in the `Makefile`. */
 #include KEYBOARD_MODEL_FILE
+
+#include <avr/pgmspace.h>
+#include "../libraries/usb_keyboard_debug.h"
+#include "../libraries/print.h"
+#include "../libraries/hw_interface.h"
 
 /* A key can be either a normal character or a modifier key. A struct
    is used to keep track of the keycode and type of key. Layouts are
@@ -179,7 +179,9 @@ ISR(TIMER0_COMPA_vect) {
       key[k].bounce <<= 1;
     }
   }
-  release_rows();
+  /* There probably is no need to release the rows. Rather it might
+     introduce unwanted EMI. */
+  //  release_rows();
 
   /* Check if the trigger to jump to the bootloader has been
      activated. In this case when both shift keys are pressed at the

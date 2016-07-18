@@ -32,11 +32,12 @@
 #include KEYBOARD_MODEL_FILE
 
 struct {uint8_t *const pin; const uint8_t bit;} column_pins[NUMBER_OF_COLUMNS] = COLUMN_PINS;
-const   uint8_t                                 row_bits[NUMBER_OF_ROWS]       = ROW_BITS;
+const   uint8_t                                 row_bits[NUMBER_OF_ROWS+1]       = ROW_BITS;
 
 /* The `pin` struct describes a AVR pin.
  * See <http://maxembedded.com/2011/06/10/port-operations-in-avr/> for an
- * overview of how AVR i/o works. */
+ * overview of how AVR i/o works.
+ */
 struct pin {uint8_t *const ddr; uint8_t *const port; const uint8_t bits;};
 
 void pull_row(uint8_t r) {
@@ -45,54 +46,28 @@ void pull_row(uint8_t r) {
 }
 
 void release_rows(void) {
-  ROW_PORT |= ROW_MASK;
-  _delay_us(1);
+  pull_row(NUMBER_OF_ROWS); // The last entry in row_bits is a "gate keeper" which disables all rows
 }
 
 bool probe_column(uint8_t c) {
   return (*column_pins[c].pin & column_pins[c].bit) == 0;
 }
 
-// 2 = scroll lock, 1 = caps lock, 0 = num lock.
 void update_leds(uint8_t keyboard_leds) {
-  // TODO: Replace by some smart definitions in corresponding board.h-files.
-#if defined hoof_20131001_h__
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 3) & 0b00100000); // Caps Lock
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Scroll Lock
-#elif defined hoof_20150108_h__
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 3) & 0b00100000); // Caps Lock
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Scroll Lock
-#elif defined flake_20130602_h__
-  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 6) & 0b10000000); // Caps Lock
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Win Lock (used as Num Lock)
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
-#elif defined flake_20140521_h__
-  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 7) & 0b10000000); // Caps Lock
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 4) & 0b00100000); // Win Lock (used as Num Lock)
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
-#elif defined paw_20130602_h__
-  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
-#elif defined paw_20160418_h__
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 3) & 0b00100000); // Scroll Lock
-  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 7) & 0b10000000); // Num Lock
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
-#elif defined petal_20131001_h__
-  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
-#elif defined squid_20140518_h__
-  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 5) & 0b10000000); // Scroll Lock
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Num Lock
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 5) & 0b01000000); // Caps Lock
-#elif defined talk_20151102_h__
-  PORTB = (PORTB & 0b01111111) | ((~keyboard_leds << 6) & 0b10000000); // Caps Lock
-  PORTC = (PORTC & 0b11011111) | ((~keyboard_leds << 5) & 0b00100000); // Win Lock (used as Num Lock)
-  PORTC = (PORTC & 0b10111111) | ((~keyboard_leds << 4) & 0b01000000); // Scroll Lock
-#else
-  #error Do not know how to implement update_leds()
-#endif
+  if(keyboard_leds & 0b00000001)
+    NUM_LOCK(ON);
+  else
+    NUM_LOCK(OFF);
+
+  if(keyboard_leds & 0b00000010)
+    CAPS_LOCK(ON);
+  else
+    CAPS_LOCK(OFF);
+
+  if(keyboard_leds & 0b00000100)
+    SCROLL_LOCK(ON);
+  else
+    SCROLL_LOCK(OFF);
 }
 
 /* ### keyboard_init
@@ -100,9 +75,8 @@ void update_leds(uint8_t keyboard_leds) {
  * Set up the ATmega32 microcontroller.
  *
  * This function is called very early in `init` and will never be
- * called again.
+ * called again. 
  */
-
 void keyboard_init() {
   /* First we set the CPU frenquence to 16MHz instead of the
    * default 2MHz. */
@@ -131,8 +105,7 @@ void keyboard_init() {
   /* Last we set up the timer that will trigger an interrupt about
    * every millisecond. We will set up the timer without enabling it;
    * it will be enabled by the `main` function once the hardware is
-   * properly configured.
-   */
+   * properly configured. */
   poll_timer_setup();
 }
 

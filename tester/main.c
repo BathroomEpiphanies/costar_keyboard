@@ -32,10 +32,7 @@ int main(void) {
       for(uint8_t c = 0; c < NUMBER_OF_COLUMNS; c++) {
         bool b = probe_column(c);
         if(!b) {
-          sprintf(tmp_str, "%02d %02d\n\n", r, c);
-          print_S("\n\nSomething went wrong here: ");
-          print_S(tmp_str);
-          _delay_ms(1000);
+          print_S("0");
         }
         else
           print_S("1");
@@ -45,10 +42,7 @@ int main(void) {
       for(uint8_t c = 0; c < NUMBER_OF_COLUMNS; c++) {
         bool b = probe_column(c);
         if(b) {
-          sprintf(tmp_str, "%02d %02d\n\n", r, c);
-          print_S("\n\nSomething went wrong here: ");
-          print_S(tmp_str);
-          _delay_ms(1000);
+          print_S("1");
         }
         else
           print_S("0");

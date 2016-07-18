@@ -19,6 +19,9 @@
 #define NUMBER_OF_COLUMNS   8
 #define NUMBER_OF_KEYS    144
 
+#define ON 1
+#define OFF 0
+
 /* Convert physical keyboard layout to matrix array. This is a macro
    to define keymap easily in keyboard layout form. All ANSI ISO JIS
    Layouts are on the same PCB */

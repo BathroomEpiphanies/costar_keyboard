@@ -8,8 +8,13 @@
 #define STR_PRODUCT      L"Filco Majestouch TKL"
 #define PRODUCT_ID       0x047D
 
+#define NUM_LOCK(x)
+#define CAPS_LOCK(x)   ((x) == ON ? (PORTC &= ~0b00100000) : (PORTC |= 0b00100000))
+#define SCROLL_LOCK(x) ((x) == ON ? (PORTC &= ~0b01000000) : (PORTC |= 0b01000000))
+
 #define ROW_PORT  PORTD
 #define ROW_MASK  0b01111011
+
 #define ROW_BITS \
   {              \
     0b00011011,  \
@@ -29,7 +34,8 @@
     0b00010011,  \
     0b01101000,  \
     0b00001011,  \
-    0b00111011   \
+    0b00111011,  \
+    ROW_MASK     \
   }
 
 #define COLUMN_PINS \

@@ -8,6 +8,10 @@
 #define STR_PRODUCT      L"Rosewill"
 #define PRODUCT_ID       0x047D
 
+#define NUM_LOCK(x)    ((x) == ON ? (PORTC &= ~0b00100000) : (PORTC |= 0b00100000))
+#define CAPS_LOCK(x)   ((x) == ON ? (PORTC &= ~0b01000000) : (PORTC |= 0b01000000))
+#define SCROLL_LOCK(x) ((x) == ON ? (PORTB &= ~0b10000000) : (PORTB |= 0b10000000))
+
 #define ROW_PORT  PORTD
 #define ROW_MASK  0b01110111
 
@@ -30,7 +34,8 @@
     0b01100000,  \
     0b01000111,  \
     0b01000011,  \
-    0b00110111   \
+    0b00110111,  \
+    ROW_MASK     \
   }
 
 #define COLUMN_PINS \
