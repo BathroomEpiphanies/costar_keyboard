@@ -9,8 +9,8 @@
 #define PRODUCT_ID       0x047D
 
 #define NUM_LOCK(x)    
-#define CAPS_LOCK(x)   ((x) == ON ? (PORTC &= ~0b00100000) : (PORTC |= 0b00100000))
-#define SCROLL_LOCK(x) ((x) == ON ? (PORTC &= ~0b01000000) : (PORTC |= 0b01000000))
+#define CAPS_LOCK(x)   ((x) == ON ? (PORTC &= ~0b01000000) : (PORTC |= 0b01000000))
+#define SCROLL_LOCK(x) ((x) == ON ? (PORTC &= ~0b00100000) : (PORTC |= 0b00100000))
 
 #define ROW_PORT  PORTD
 #define ROW_MASK  0b01111011
