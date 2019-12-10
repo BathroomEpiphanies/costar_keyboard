@@ -40,7 +40,7 @@
 /*      0         1         2         3         4         5         6         7   */    \
 /* A */ KC_##KA0, KC_##KA1, KC_##KA2, KC_##KA3, KC_##KA4, KC_##KA5, KC_##KA6, KC_##KA7, \
 /* B */ KC_##KB0, KC_##KB1, KC_##KB2, KC_##KB3, KC_##KB4, KC_##KB5, KC_##KB6, KC_##KB7, \
-/* C */ KC_##KC0, KC_##KC1, KC_##KC2, KC_##KC3, KC_##KC4, KC_##KC5, KC_##KC6, KC_##KC7, \
+/* C */ KC_##KC0, KC_##KC1, KC_##KP2, KC_##KM3, KC_##KC4, KC_##KC5, KC_##KC6, KC_##KC7, /* The matrix for The Unloved Bastard has LGUI and RGUI moved here */ \
 /* D */ KC_##KD0, KC_##KD1, KC_##KD2, KC_##KD3, KC_##KD4, KC_##KD5, KC_##KD6, KC_##KD7, \
 /* E */ KC_##KE0, KC_##KE1, KC_##KE2, KC_##KE3, KC_##KE4, KC_##KE5, KC_##KE6, KC_##KE7, \
 /* F */ KC_##KF0, KC_##KF1, KC_##KF2, KC_##KF3, KC_##KF4, KC_##KF5, KC_##KF6, KC_##KF7, \
